@@ -775,11 +775,17 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                     const SizedBox(height: 16),
                     FormBuilderTextField(
                       name: 'hargaSatuan',
-                      decoration: const InputDecoration(
+                      style: AppTextStyles.money(
+                        Theme.of(context).colorScheme.onSurface,
+                      ),
+                      decoration: InputDecoration(
                         labelText: 'Harga satuan',
                         hintText: '0',
                         prefixText: 'Rp ',
                         floatingLabelBehavior: FloatingLabelBehavior.always,
+                        prefixStyle: AppTextStyles.money(
+                          Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -825,11 +831,17 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                       child: FormBuilderTextField(
                         key: const Key('transaction_nominal_field'),
                         name: 'nominal',
-                        decoration: const InputDecoration(
+                        style: AppTextStyles.money(
+                          Theme.of(context).colorScheme.onSurface,
+                        ),
+                        decoration: InputDecoration(
                           labelText: 'Nominal',
                           hintText: '0',
                           prefixText: 'Rp ',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
+                          prefixStyle: AppTextStyles.money(
+                            Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
@@ -885,33 +897,32 @@ class _CategorySuggestionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final semantics = context.semanticColors;
-
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: AppRadius.circular,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
           decoration: BoxDecoration(
-            color: selected ? semantics.brandSoft : semantics.brandSoft,
-            borderRadius: BorderRadius.circular(10),
+            color: AppColors.bgBrandSoft,
+            borderRadius: AppRadius.circular,
             border: Border.all(
               color: selected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.primary.withValues(alpha: 0.35),
+                  ? AppColors.brandPrimary
+                  : AppColors.brandPrimary.withValues(alpha: 0.35),
             ),
           ),
           child: Text(
             label,
-            style: theme.textTheme.bodySmall?.copyWith(
+            style: AppTextStyles.bodySmall(
+              selected ? AppColors.brandPrimary : AppColors.textPrimary,
+            ).copyWith(
               fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-              color: selected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface,
             ),
           ),
         ),
