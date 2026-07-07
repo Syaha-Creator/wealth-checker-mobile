@@ -72,50 +72,95 @@ void main() {
       );
     });
 
-    testWidgets('transaction form category chips and nominal prefix',
-        (tester) async {
-      tester.view.physicalSize = const Size(400, 1100);
+    testWidgets('transaction form category chips use brand styling', (tester) async {
+      const viewportHeight = 852.0;
+      tester.view.physicalSize = const Size(393, 852);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            accountsListProvider.overrideWith(_SuccessAccountsList.new),
-            transactionCategoriesProvider.overrideWith(
-              (_) async => const TransactionCategories(
-                pendapatan: ['Gaji', 'Bonus', 'Freelance'],
-              ),
-            ),
-            wealthSummaryProvider.overrideWith((_) async => _sampleSummary),
-            monthlyCashFlowProvider.overrideWith((_) async => _sampleCashFlow),
-            transactionsListProvider(const TransactionsFilter())
-                .overrideWith(_EmptyTransactionsList.new),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.light,
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [Locale('id')],
-            home: const TransactionFormPage(type: TransactionType.pendapatan),
-          ),
-        ),
+      await _pumpTransactionForm(tester);
+      await tester.pumpAndSettle();
+
+      final chipsCapture = find.byKey(const Key('category_suggestion_chips_capture'));
+      expect(chipsCapture, findsOneWidget);
+      expect(find.byType(FilterChip), findsNothing);
+      expect(find.byType(ActionChip), findsNothing);
+
+      await tester.ensureVisible(chipsCapture);
+      await tester.pumpAndSettle();
+      expect(
+        _isWithinViewport(tester, chipsCapture, viewportHeight),
+        isTrue,
+        reason: 'Category chips must be visible on screen',
       );
-      await tester.pumpAndSettle();
-
       expect(find.text('Gaji'), findsOneWidget);
-      await tester.ensureVisible(find.text('Nominal'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Rp'), findsOneWidget);
+      expect(find.text('Bonus'), findsOneWidget);
+      expect(find.text('Freelance'), findsOneWidget);
 
       await expectLater(
-        find.byType(TransactionFormPage),
-        matchesGoldenFile('goldens/transaction_form_chips_nominal.png'),
+        chipsCapture,
+        matchesGoldenFile('goldens/transaction_form_category_chips.png'),
+      );
+    });
+
+    testWidgets('transaction form nominal shows Rp prefix when empty and unfocused',
+        (tester) async {
+      const viewportHeight = 852.0;
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await _pumpTransactionForm(tester);
+      await tester.pumpAndSettle();
+
+      final nominalCapture = find.byKey(const Key('transaction_nominal_capture'));
+      final nominalField = find.byKey(const Key('transaction_nominal_field'));
+      expect(nominalCapture, findsOneWidget);
+      expect(nominalField, findsOneWidget);
+
+      await tester.ensureVisible(nominalCapture);
+      await tester.pumpAndSettle();
+
+      final nominalDecorator = find.descendant(
+        of: nominalField,
+        matching: find.byType(InputDecorator),
+      );
+      expect(nominalDecorator, findsOneWidget);
+      expect(
+        _isWithinViewport(tester, nominalCapture, viewportHeight),
+        isTrue,
+        reason: 'Nominal field must be visible on screen',
+      );
+
+      final decorator = tester.widget<InputDecorator>(nominalDecorator);
+      expect(decorator.decoration.prefixText, 'Rp ');
+      expect(
+        decorator.decoration.floatingLabelBehavior,
+        FloatingLabelBehavior.always,
+      );
+      expect(decorator.isFocused, isFalse);
+
+      final rpPrefix = find.descendant(
+        of: nominalCapture,
+        matching: find.textContaining('Rp'),
+      );
+      expect(rpPrefix, findsOneWidget);
+      expect(
+        _isWithinViewport(tester, rpPrefix, viewportHeight),
+        isTrue,
+        reason: 'Rp prefix text must be visible on screen',
+      );
+      expect(
+        _isWithinParent(tester, rpPrefix, nominalCapture),
+        isTrue,
+        reason: 'Rp prefix must render inside nominal field',
+      );
+
+      await expectLater(
+        nominalCapture,
+        matchesGoldenFile('goldens/transaction_form_nominal_empty.png'),
       );
     });
 
@@ -151,6 +196,63 @@ void main() {
       );
     });
   });
+}
+
+Future<void> _pumpTransactionForm(WidgetTester tester) {
+  return tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        accountsListProvider.overrideWith(_SuccessAccountsList.new),
+        transactionCategoriesProvider.overrideWith(
+          (_) async => const TransactionCategories(
+            pendapatan: ['Gaji', 'Bonus', 'Freelance'],
+          ),
+        ),
+        wealthSummaryProvider.overrideWith((_) async => _sampleSummary),
+        monthlyCashFlowProvider.overrideWith((_) async => _sampleCashFlow),
+        transactionsListProvider(const TransactionsFilter())
+            .overrideWith(_EmptyTransactionsList.new),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.light,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('id')],
+        home: const TransactionFormPage(type: TransactionType.pendapatan),
+      ),
+    ),
+  );
+}
+
+bool _isWithinViewport(
+  WidgetTester tester,
+  Finder finder,
+  double viewportHeight,
+) {
+  final box = tester.renderObject<RenderBox>(finder);
+  final top = box.localToGlobal(Offset.zero).dy;
+  final bottom = top + box.size.height;
+  return top >= 0 && bottom <= viewportHeight;
+}
+
+bool _isWithinParent(
+  WidgetTester tester,
+  Finder child,
+  Finder parent,
+) {
+  final childBox = tester.renderObject<RenderBox>(child);
+  final parentBox = tester.renderObject<RenderBox>(parent);
+  final childTopLeft = childBox.localToGlobal(Offset.zero);
+  final childBottomRight = childBox.localToGlobal(childBox.size.bottomRight(Offset.zero));
+  final parentTopLeft = parentBox.localToGlobal(Offset.zero);
+  final parentBottomRight = parentBox.localToGlobal(parentBox.size.bottomRight(Offset.zero));
+  return childTopLeft.dx >= parentTopLeft.dx &&
+      childTopLeft.dy >= parentTopLeft.dy &&
+      childBottomRight.dx <= parentBottomRight.dx &&
+      childBottomRight.dy <= parentBottomRight.dy;
 }
 
 class _FailingAuthRepository extends AuthRepository {

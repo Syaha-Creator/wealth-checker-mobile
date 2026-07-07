@@ -596,8 +596,6 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                     FormBuilderField<String>(
                       name: 'kategori',
                       builder: (field) {
-                        final theme = Theme.of(context);
-                        final semantics = context.semanticColors;
                         final selectedValue = field.value ?? '';
 
                         return Column(
@@ -615,38 +613,22 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                             ),
                             if (categorySuggestions.isNotEmpty) ...[
                               const SizedBox(height: 8),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children:
-                                    categorySuggestions.take(8).map((category) {
-                                  final selected = selectedValue == category;
-                                  return FilterChip(
-                                    label: Text(category),
-                                    selected: selected,
-                                    showCheckmark: false,
-                                    onSelected: (_) => field.didChange(category),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      side: BorderSide(
-                                        color: selected
-                                            ? theme.colorScheme.primary
-                                            : theme.dividerColor,
-                                      ),
-                                    ),
-                                    backgroundColor: theme.cardColor,
-                                    selectedColor: semantics.brandSoft,
-                                    labelStyle: theme.textTheme.bodySmall
-                                        ?.copyWith(
-                                      fontWeight: selected
-                                          ? FontWeight.w600
-                                          : FontWeight.w500,
-                                      color: selected
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onSurface,
-                                    ),
-                                  );
-                                }).toList(),
+                              RepaintBoundary(
+                                key: const Key('category_suggestion_chips_capture'),
+                                child: Wrap(
+                                  key: const Key('category_suggestion_chips'),
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children:
+                                      categorySuggestions.take(8).map((category) {
+                                    final selected = selectedValue == category;
+                                    return _CategorySuggestionChip(
+                                      label: category,
+                                      selected: selected,
+                                      onTap: () => field.didChange(category),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ],
                           ],
@@ -793,16 +775,11 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                     const SizedBox(height: 16),
                     FormBuilderTextField(
                       name: 'hargaSatuan',
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Harga satuan',
                         hintText: '0',
-                        prefix: Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Text(
-                            'Rp',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ),
+                        prefixText: 'Rp ',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -843,27 +820,26 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                   ],
                   if (!_type.needsAssetEntity) ...[
                     const SizedBox(height: 16),
-                    FormBuilderTextField(
-                      name: 'nominal',
-                      decoration: InputDecoration(
-                        labelText: 'Nominal',
-                        hintText: '0',
-                        prefix: Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Text(
-                            'Rp',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
+                    RepaintBoundary(
+                      key: const Key('transaction_nominal_capture'),
+                      child: FormBuilderTextField(
+                        key: const Key('transaction_nominal_field'),
+                        name: 'nominal',
+                        decoration: const InputDecoration(
+                          labelText: 'Nominal',
+                          hintText: '0',
+                          prefixText: 'Rp ',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.integer(),
+                          FormBuilderValidators.min(1),
+                        ]),
                       ),
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.integer(),
-                        FormBuilderValidators.min(1),
-                      ]),
                     ),
                   ],
                   if (_errorMessage != null) ...[
@@ -891,6 +867,54 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _CategorySuggestionChip extends StatelessWidget {
+  const _CategorySuggestionChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final semantics = context.semanticColors;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: selected ? semantics.brandSoft : semantics.brandSoft,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: selected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.primary.withValues(alpha: 0.35),
+            ),
+          ),
+          child: Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+              color: selected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface,
+            ),
+          ),
+        ),
       ),
     );
   }
