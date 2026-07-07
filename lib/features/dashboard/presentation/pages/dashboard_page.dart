@@ -399,7 +399,7 @@ class _BreakdownSection extends StatelessWidget {
           subtitle: 'Aset tetap',
           amount: summary.totalBarang,
           icon: Icons.home_work_outlined,
-          color: Theme.of(context).colorScheme.secondary,
+          color: context.semanticColors.textMuted,
         ),
         const SizedBox(height: 8),
         _BreakdownTile(
@@ -415,7 +415,7 @@ class _BreakdownSection extends StatelessWidget {
           subtitle: 'Sebelum dikurangi utang',
           amount: summary.totalAset,
           icon: Icons.account_balance_wallet_outlined,
-          color: Theme.of(context).colorScheme.tertiary,
+          color: context.semanticColors.textMuted,
         ),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../../../shared/widgets/async_value_widget.dart';
@@ -592,30 +593,66 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                       !_type.needsAssetEntity &&
                       _type != TransactionType.transfer) ...[
                     const SizedBox(height: 16),
-                    FormBuilderTextField(
+                    FormBuilderField<String>(
                       name: 'kategori',
-                      decoration: const InputDecoration(
-                        labelText: 'Kategori',
-                        hintText: 'Makanan, Gaji, dll.',
-                      ),
-                      textInputAction: TextInputAction.next,
+                      builder: (field) {
+                        final theme = Theme.of(context);
+                        final semantics = context.semanticColors;
+                        final selectedValue = field.value ?? '';
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                              key: ValueKey('kategori-${field.value}'),
+                              initialValue: selectedValue,
+                              decoration: const InputDecoration(
+                                labelText: 'Kategori',
+                                hintText: 'Makanan, Gaji, dll.',
+                              ),
+                              textInputAction: TextInputAction.next,
+                              onChanged: field.didChange,
+                            ),
+                            if (categorySuggestions.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children:
+                                    categorySuggestions.take(8).map((category) {
+                                  final selected = selectedValue == category;
+                                  return FilterChip(
+                                    label: Text(category),
+                                    selected: selected,
+                                    showCheckmark: false,
+                                    onSelected: (_) => field.didChange(category),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                        color: selected
+                                            ? theme.colorScheme.primary
+                                            : theme.dividerColor,
+                                      ),
+                                    ),
+                                    backgroundColor: theme.cardColor,
+                                    selectedColor: semantics.brandSoft,
+                                    labelStyle: theme.textTheme.bodySmall
+                                        ?.copyWith(
+                                      fontWeight: selected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      color: selected
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.onSurface,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ],
+                        );
+                      },
                     ),
-                    if (categorySuggestions.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 4,
-                        children: categorySuggestions.take(8).map((category) {
-                          return ActionChip(
-                            label: Text(category),
-                            onPressed: () {
-                              _formKey.currentState?.fields['kategori']
-                                  ?.didChange(category);
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ],
                   ],
                   const SizedBox(height: 16),
                   FormBuilderTextField(
@@ -756,10 +793,16 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                     const SizedBox(height: 16),
                     FormBuilderTextField(
                       name: 'hargaSatuan',
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Harga satuan',
                         hintText: '0',
-                        prefixText: 'Rp ',
+                        prefix: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            'Rp',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
                       ),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -802,10 +845,16 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
                     const SizedBox(height: 16),
                     FormBuilderTextField(
                       name: 'nominal',
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Nominal',
                         hintText: '0',
-                        prefixText: 'Rp ',
+                        prefix: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            'Rp',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
                       ),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,

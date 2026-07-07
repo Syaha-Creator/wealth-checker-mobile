@@ -37,7 +37,7 @@ class TransactionQuickAddSheet extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             _QuickAddButton(
-              icon: Icons.arrow_downward_rounded,
+              icon: Icons.arrow_upward_rounded,
               label: 'Pendapatan',
               subtitle: 'Gaji, bonus, dan pemasukan lain',
               color: colorScheme.primary,
@@ -45,7 +45,7 @@ class TransactionQuickAddSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             _QuickAddButton(
-              icon: Icons.arrow_upward_rounded,
+              icon: Icons.arrow_downward_rounded,
               label: 'Pengeluaran',
               subtitle: 'Belanja, tagihan, dan pengeluaran lain',
               color: colorScheme.error,

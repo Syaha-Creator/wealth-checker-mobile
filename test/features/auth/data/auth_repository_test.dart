@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:wealth_checker_mobile/core/network/api_exception.dart';
 import 'package:wealth_checker_mobile/features/auth/data/auth_repository.dart';
 
 class _FakeDio implements Dio {
@@ -22,6 +23,15 @@ class _FakeDio implements Dio {
     ProgressCallback? onReceiveProgress,
   }) async {
     final response = await _postHandler(path, data: data);
+    if (response.statusCode != null && response.statusCode! >= 400) {
+      throw DioException(
+        requestOptions: RequestOptions(path: path),
+        response: response,
+        type: DioExceptionType.badResponse,
+        message:
+            'This exception was thrown because the response has a status code of ${response.statusCode} and RequestOptions.validateStatus was configured to throw for this status code.',
+      );
+    }
     return Response<T>(
       requestOptions: response.requestOptions,
       data: response.data as T,
@@ -90,5 +100,32 @@ void main() {
     );
 
     expect(token, 'nested-session-token');
+  });
+
+  test('signIn surfaces friendly message for Better Auth 401 response', () async {
+    final dio = _FakeDio((path, {data}) async {
+      return Response<dynamic>(
+        requestOptions: RequestOptions(path: path),
+        statusCode: 401,
+        data: {
+          'code': 'INVALID_EMAIL_OR_PASSWORD',
+          'message': 'Invalid email or password',
+        },
+      );
+    });
+
+    final repository = AuthRepository(dio);
+
+    expect(
+      () => repository.signIn(
+        email: 'user@example.com',
+        password: 'wrongpassword123',
+      ),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Email atau password salah.')
+            .having((error) => error.statusCode, 'statusCode', 401),
+      ),
+    );
   });
 }
