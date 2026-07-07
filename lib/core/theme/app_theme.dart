@@ -171,6 +171,7 @@ abstract final class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
+      fontFamily: 'Plus Jakarta Sans',
       colorScheme: colorScheme,
       scaffoldBackgroundColor: scaffoldBackground,
       dividerColor: dividerColor,

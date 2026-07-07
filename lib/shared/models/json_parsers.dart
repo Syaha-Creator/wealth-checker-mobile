@@ -2,7 +2,7 @@ int parseJsonInt(dynamic value) => (value as num).toInt();
 
 int parseJsonIntOrString(dynamic value) {
   if (value is String) {
-    return int.parse(value);
+    return double.parse(value).round();
   }
   return parseJsonInt(value);
 }

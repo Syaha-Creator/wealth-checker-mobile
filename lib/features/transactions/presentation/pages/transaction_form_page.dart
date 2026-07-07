@@ -16,6 +16,8 @@ import '../../../assets/presentation/providers/fixed_asset_holdings_provider.dar
 import '../../../assets/presentation/providers/liquid_asset_holdings_provider.dart';
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
 import '../../../analytics/presentation/providers/analytics_providers.dart';
+import '../../../debts_receivables/data/models/debt.dart';
+import '../../../debts_receivables/data/models/receivable.dart';
 import '../../../debts_receivables/presentation/providers/debts_list_provider.dart';
 import '../../../debts_receivables/presentation/providers/receivables_list_provider.dart';
 import '../../data/models/transaction.dart';
@@ -382,15 +384,28 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
   Widget _buildForm(Transaction? transaction) {
     final accountsAsync = ref.watch(accountsListProvider);
     final categoriesAsync = ref.watch(transactionCategoriesProvider);
-    final debtsAsync = ref.watch(allActiveDebtsProvider);
-    final receivablesAsync = ref.watch(receivablesListProvider);
-    final liquidHoldingsAsync = ref.watch(allLiquidAssetHoldingsProvider);
-    final fixedHoldingsAsync = ref.watch(allFixedAssetHoldingsProvider);
+
+    final debtsAsync = _type.needsRelatedDebtDropdown
+        ? ref.watch(allActiveDebtsProvider)
+        : const AsyncValue<List<Debt>>.data([]);
+
+    final receivablesAsync = _type.needsRelatedReceivableDropdown
+        ? ref.watch(receivablesListProvider)
+        : const AsyncValue<List<Receivable>>.data([]);
+
+    final AsyncValue<List<LiquidAssetHolding>> liquidHoldingsAsync;
+    final AsyncValue<List<FixedAssetHolding>> fixedHoldingsAsync;
     if (_type.isLiquidAssetType) {
+      liquidHoldingsAsync = ref.watch(allLiquidAssetHoldingsProvider);
+      fixedHoldingsAsync = const AsyncValue.data([]);
       ref.watch(liquidAssetHoldingsProvider);
-    }
-    if (_type.isFixedAssetType) {
+    } else if (_type.isFixedAssetType) {
+      liquidHoldingsAsync = const AsyncValue.data([]);
+      fixedHoldingsAsync = ref.watch(allFixedAssetHoldingsProvider);
       ref.watch(fixedAssetHoldingsProvider);
+    } else {
+      liquidHoldingsAsync = const AsyncValue.data([]);
+      fixedHoldingsAsync = const AsyncValue.data([]);
     }
 
     return SafeArea(
