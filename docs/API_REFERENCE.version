@@ -1,0 +1,7 @@
+source_repo: Syaha-Creator/wealth-checker
+source_path: docs/API.md
+source_branch: main
+synced_commit: 5c9764964ccf26e4678aacad74f87ec524e84884
+synced_commit_date: 2026-07-06T09:33:15Z
+synced_commit_message: "feat(api): tambahkan filter from/to/kategori di GET /transactions\n\nFilter diterapkan di WHERE SQL sebelum pagination agar mobile app tidak\nkehilangan data saat infinite scroll dengan rentang tanggal atau kategori.\n\nCo-authored-by: Cursor <cursoragent@cursor.com>"
+synced_at: 2026-07-06T09:42:44Z
