@@ -17,7 +17,7 @@ class HealthCheckupPage extends ConsumerWidget {
     final summaryAsync = ref.watch(wealthSummaryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Health Check-up')),
+      appBar: AppBar(title: const Text('Cek Kesehatan Finansial')),
       body: AsyncValueWidget<HealthCheckup>(
         value: checkupAsync,
         onRetry: () => ref.invalidate(healthCheckupProvider),

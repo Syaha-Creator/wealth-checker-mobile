@@ -39,6 +39,89 @@ void main() {
       expect(find.text('Breakdown'), findsOneWidget);
       expect(find.text('Sisa Uang Bulanan'), findsOneWidget);
       expect(find.textContaining('Rp 2.500.000'), findsWidgets);
+      expect(find.text('Kelola Rekening'), findsOneWidget);
+      expect(find.text('Lihat Saran Budgeting'), findsOneWidget);
+      expect(
+        find.text('Kelola Target Impian', skipOffstage: false),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('shows breakdown and cash flow before navigation sections',
+        (tester) async {
+      tester.view.physicalSize = const Size(600, 2200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          wealthSummaryOverride: (_) async => _sampleSummary,
+          monthlyCashFlowOverride: (_) async => _sampleCashFlow,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final breakdownY = tester.getTopLeft(find.text('Breakdown')).dy;
+      final cashFlowY = tester.getTopLeft(find.text('Sisa Uang Bulanan')).dy;
+      final firstNavSectionY =
+          tester.getTopLeft(find.text('Kelola Data Keuangan')).dy;
+
+      expect(breakdownY, lessThan(firstNavSectionY));
+      expect(cashFlowY, lessThan(firstNavSectionY));
+    });
+
+    testWidgets('renders three navigation sections in correct order',
+        (tester) async {
+      tester.view.physicalSize = const Size(600, 2200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          wealthSummaryOverride: (_) async => _sampleSummary,
+          monthlyCashFlowOverride: (_) async => _sampleCashFlow,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final kelolaFinder =
+          find.text('Kelola Data Keuangan', skipOffstage: false);
+      final wawasanFinder =
+          find.text('Wawasan Finansial', skipOffstage: false);
+      final perencanaanFinder =
+          find.text('Perencanaan Jangka Panjang', skipOffstage: false);
+
+      expect(kelolaFinder, findsOneWidget);
+      expect(wawasanFinder, findsOneWidget);
+      expect(perencanaanFinder, findsOneWidget);
+
+      final kelolaY = tester.getTopLeft(kelolaFinder).dy;
+      final wawasanY = tester.getTopLeft(wawasanFinder).dy;
+      final perencanaanY = tester.getTopLeft(perencanaanFinder).dy;
+
+      expect(kelolaY, lessThan(wawasanY));
+      expect(wawasanY, lessThan(perencanaanY));
+    });
+
+    testWidgets('renders navigation as grid tiles not outlined buttons',
+        (tester) async {
+      tester.view.physicalSize = const Size(600, 2200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          wealthSummaryOverride: (_) async => _sampleSummary,
+          monthlyCashFlowOverride: (_) async => _sampleCashFlow,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(OutlinedButton), findsNothing);
+      expect(find.byType(GridView, skipOffstage: false), findsNWidgets(3));
     });
 
     testWidgets('renders loading state', (tester) async {

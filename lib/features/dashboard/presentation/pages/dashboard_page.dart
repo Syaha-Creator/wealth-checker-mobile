@@ -95,96 +95,191 @@ class DashboardPage extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 _NetWorthCard(summary: summary),
-                const SizedBox(height: 16),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/accounts'),
-                  icon: const Icon(Icons.account_balance_wallet_outlined),
-                  label: const Text('Kelola Rekening'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/transactions'),
-                  icon: const Icon(Icons.receipt_long_outlined),
-                  label: const Text('Lihat Semua Transaksi'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/debts'),
-                  icon: const Icon(Icons.money_off_outlined),
-                  label: const Text('Kelola Utang'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/receivables'),
-                  icon: const Icon(Icons.savings_outlined),
-                  label: const Text('Kelola Piutang'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/assets/liquid'),
-                  icon: const Icon(Icons.trending_up_outlined),
-                  label: const Text('Kelola Investasi'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/assets/fixed'),
-                  icon: const Icon(Icons.inventory_2_outlined),
-                  label: const Text('Kelola Aset Tetap'),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Wawasan Finansial',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/health-checkup'),
-                  icon: const Icon(Icons.health_and_safety_outlined),
-                  label: const Text('Health Check-up'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/budgeting'),
-                  icon: const Icon(Icons.pie_chart_outline),
-                  label: const Text('Budgeting Advisor'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/analytics'),
-                  icon: const Icon(Icons.analytics_outlined),
-                  label: const Text('Analisa Keuangan'),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Perencanaan Jangka Panjang',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/dream-goals'),
-                  icon: const Icon(Icons.flag_outlined),
-                  label: const Text('Dream Tracker'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/retirement-plan'),
-                  icon: const Icon(Icons.elderly_outlined),
-                  label: const Text('Rencana Pensiun'),
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 _BreakdownSection(summary: summary),
                 const SizedBox(height: 24),
                 _MonthlyCashFlowSection(
                   value: monthlyCashFlowAsync,
                   onRetry: () => ref.invalidate(monthlyCashFlowProvider),
                 ),
+                const SizedBox(height: 24),
+                _DashboardNavSection(
+                  title: 'Kelola Data Keuangan',
+                  items: [
+                    _DashboardNavItem(
+                      icon: Icons.account_balance_wallet_outlined,
+                      label: 'Kelola Rekening',
+                      route: '/accounts',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.receipt_long_outlined,
+                      label: 'Lihat Semua Transaksi',
+                      route: '/transactions',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.money_off_outlined,
+                      label: 'Kelola Utang',
+                      route: '/debts',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.savings_outlined,
+                      label: 'Kelola Piutang',
+                      route: '/receivables',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.trending_up_outlined,
+                      label: 'Kelola Investasi',
+                      route: '/assets/liquid',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.inventory_2_outlined,
+                      label: 'Kelola Aset Tetap',
+                      route: '/assets/fixed',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _DashboardNavSection(
+                  title: 'Wawasan Finansial',
+                  items: [
+                    _DashboardNavItem(
+                      icon: Icons.health_and_safety_outlined,
+                      label: 'Cek Kesehatan Finansial',
+                      route: '/health-checkup',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.pie_chart_outline,
+                      label: 'Lihat Saran Budgeting',
+                      route: '/budgeting',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.analytics_outlined,
+                      label: 'Lihat Analisa Keuangan',
+                      route: '/analytics',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _DashboardNavSection(
+                  title: 'Perencanaan Jangka Panjang',
+                  items: [
+                    _DashboardNavItem(
+                      icon: Icons.flag_outlined,
+                      label: 'Kelola Target Impian',
+                      route: '/dream-goals',
+                    ),
+                    _DashboardNavItem(
+                      icon: Icons.elderly_outlined,
+                      label: 'Lihat Rencana Pensiun',
+                      route: '/retirement-plan',
+                    ),
+                  ],
+                ),
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _DashboardNavItem {
+  const _DashboardNavItem({
+    required this.icon,
+    required this.label,
+    required this.route,
+  });
+
+  final IconData icon;
+  final String label;
+  final String route;
+}
+
+class _DashboardNavSection extends StatelessWidget {
+  const _DashboardNavSection({
+    required this.title,
+    required this.items,
+  });
+
+  final String title;
+  final List<_DashboardNavItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+        const SizedBox(height: 12),
+        _DashboardNavGrid(items: items),
+      ],
+    );
+  }
+}
+
+class _DashboardNavGrid extends StatelessWidget {
+  const _DashboardNavGrid({required this.items});
+
+  final List<_DashboardNavItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 1.25,
+      ),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return _DashboardNavTile(item: items[index]);
+      },
+    );
+  }
+}
+
+class _DashboardNavTile extends StatelessWidget {
+  const _DashboardNavTile({required this.item});
+
+  final _DashboardNavItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push(item.route),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                item.icon,
+                size: 28,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                item.label,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );

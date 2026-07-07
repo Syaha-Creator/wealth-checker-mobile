@@ -16,7 +16,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Dream Tracker'), findsOneWidget);
+      expect(find.text('Target Impian'), findsOneWidget);
       expect(find.text('Liburan ke Jepang'), findsOneWidget);
       expect(find.text('Dana Pendidikan'), findsOneWidget);
       expect(find.text('Tercapai'), findsOneWidget);

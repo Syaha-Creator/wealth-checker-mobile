@@ -33,7 +33,7 @@ class BudgetVsActualSection extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: () => context.push('/budgeting'),
             icon: const Icon(Icons.pie_chart_outline),
-            label: const Text('Buka Budgeting Advisor'),
+            label: const Text('Buka Saran Budgeting'),
           ),
         ],
       );

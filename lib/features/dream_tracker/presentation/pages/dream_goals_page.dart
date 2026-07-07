@@ -62,7 +62,7 @@ class DreamGoalsPage extends ConsumerWidget {
     final goalsAsync = ref.watch(dreamGoalsListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Dream Tracker')),
+      appBar: AppBar(title: const Text('Target Impian')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/dream-goals/new'),
         icon: const Icon(Icons.add),

@@ -18,7 +18,7 @@ void main() {
       await tester.pumpWidget(_buildTestApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Health Check-up'), findsOneWidget);
+      expect(find.text('Cek Kesehatan Finansial'), findsOneWidget);
       expect(find.textContaining('Level 3'), findsOneWidget);
       expect(find.text('Diagnosa'), findsOneWidget);
       expect(find.textContaining('dana darurat'), findsWidgets);

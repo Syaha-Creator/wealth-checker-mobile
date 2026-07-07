@@ -57,7 +57,7 @@ void main() {
       expect(find.textContaining('Pendapatan'), findsOneWidget);
     });
 
-    testWidgets('shows link to Budgeting Advisor when hasPlan is false',
+    testWidgets('shows link to Saran Budgeting when hasPlan is false',
         (tester) async {
       const data = BudgetVsActual(
         wealthLevel: 3,
@@ -75,7 +75,7 @@ void main() {
         find.text('Belum ada rencana budget untuk bulan ini.'),
         findsOneWidget,
       );
-      expect(find.text('Buka Budgeting Advisor'), findsOneWidget);
+      expect(find.text('Buka Saran Budgeting'), findsOneWidget);
     });
 
     testWidgets('shows empty state message when wealthLevel is -1',
@@ -96,7 +96,7 @@ void main() {
         find.textContaining('Lengkapi data keuangan'),
         findsOneWidget,
       );
-      expect(find.text('Buka Budgeting Advisor'), findsNothing);
+      expect(find.text('Buka Saran Budgeting'), findsNothing);
     });
   });
 
