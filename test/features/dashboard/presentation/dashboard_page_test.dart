@@ -20,7 +20,7 @@ void main() {
 
   group('DashboardPage', () {
     testWidgets('renders wealth summary data on success', (tester) async {
-      tester.view.physicalSize = const Size(600, 1400);
+      tester.view.physicalSize = const Size(600, 2200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);

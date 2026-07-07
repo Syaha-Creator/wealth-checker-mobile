@@ -22,6 +22,10 @@ import '../../features/assets/presentation/pages/liquid_assets_page.dart';
 import '../../features/health_checkup/presentation/pages/health_checkup_page.dart';
 import '../../features/budgeting/presentation/pages/budgeting_advisor_page.dart';
 import '../../features/analytics/presentation/pages/analytics_page.dart';
+import '../../features/dream_tracker/data/models/dream_goal.dart';
+import '../../features/dream_tracker/presentation/pages/dream_goal_form_page.dart';
+import '../../features/dream_tracker/presentation/pages/dream_goals_page.dart';
+import '../../features/retirement_plan/presentation/pages/retirement_plan_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../shared/providers/auth_state_provider.dart';
@@ -185,6 +189,26 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/analytics',
         builder: (context, state) => const AnalyticsPage(),
+      ),
+      GoRoute(
+        path: '/dream-goals',
+        builder: (context, state) => const DreamGoalsPage(),
+        routes: [
+          GoRoute(
+            path: 'new',
+            builder: (context, state) => const DreamGoalFormPage(),
+          ),
+          GoRoute(
+            path: ':id/edit',
+            builder: (context, state) => DreamGoalFormPage(
+              goal: state.extra as DreamGoal?,
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/retirement-plan',
+        builder: (context, state) => const RetirementPlanPage(),
       ),
     ],
   );

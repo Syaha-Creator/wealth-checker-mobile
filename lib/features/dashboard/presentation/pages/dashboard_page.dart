@@ -157,6 +157,25 @@ class DashboardPage extends ConsumerWidget {
                   label: const Text('Analisa Keuangan'),
                 ),
                 const SizedBox(height: 16),
+                Text(
+                  'Perencanaan Jangka Panjang',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/dream-goals'),
+                  icon: const Icon(Icons.flag_outlined),
+                  label: const Text('Dream Tracker'),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/retirement-plan'),
+                  icon: const Icon(Icons.elderly_outlined),
+                  label: const Text('Rencana Pensiun'),
+                ),
+                const SizedBox(height: 16),
                 _BreakdownSection(summary: summary),
                 const SizedBox(height: 24),
                 _MonthlyCashFlowSection(
@@ -183,7 +202,7 @@ class _NetWorthCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

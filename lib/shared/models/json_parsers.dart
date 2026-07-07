@@ -28,6 +28,13 @@ int parseJsonMoneyAmount(dynamic value) {
   return (value as num).round();
 }
 
+int? parseJsonMoneyAmountNullable(dynamic value) {
+  if (value == null) {
+    return null;
+  }
+  return parseJsonMoneyAmount(value);
+}
+
 double? parseJsonDoubleOrStringNullable(dynamic value) {
   if (value == null) {
     return null;
