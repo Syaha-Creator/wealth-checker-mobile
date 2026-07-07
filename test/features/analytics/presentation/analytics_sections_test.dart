@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:wealth_checker_mobile/core/theme/app_theme.dart';
@@ -216,8 +217,8 @@ void main() {
 
       expect(find.text('Gaji'), findsOneWidget);
       expect(find.text('Bonus'), findsOneWidget);
-      expect(find.text('Terbesar'), findsOneWidget);
-      expect(find.byType(LinearProgressIndicator), findsNWidgets(2));
+      expect(find.text('Terbesar'), findsNothing);
+      expect(find.byType(PieChart), findsOneWidget);
       expect(find.text('Rp 10.000.000'), findsOneWidget);
     });
 

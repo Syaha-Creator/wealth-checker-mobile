@@ -35,11 +35,11 @@ void main() {
     );
     await holdForHostScreenshot(tester, '05_tab_analitik_simulator');
 
-    await tapNavTab(tester, 'Beranda');
+    await tapNavTab(tester, 'Transaksi');
     await waitForScreenReady(
       tester,
-      readyFinder: find.textContaining('Kekayaan Bersih'),
+      readyFinder: find.text('Transaksi'),
     );
-    await holdForHostScreenshot(tester, '06_beranda_return_simulator');
+    await holdForHostScreenshot(tester, '06_tab_transaksi_simulator');
   });
 }

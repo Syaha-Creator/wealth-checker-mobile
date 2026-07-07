@@ -1,7 +1,17 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../data/models/income_report.dart';
+
+const _incomeChartColors = [
+  AppColors.accentBlue,
+  AppColors.brandPrimary,
+  AppColors.investPurple,
+  AppColors.amberAccent,
+  AppColors.infoPrimary,
+];
 
 class IncomeSection extends StatelessWidget {
   const IncomeSection({super.key, required this.data});
@@ -10,40 +20,80 @@ class IncomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     if (data.items.isEmpty) {
       return Text(
         'Tidak ada pemasukan dalam rentang tanggal ini.',
-        style: theme.textTheme.bodyMedium,
+        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
       );
     }
+
+    final sections = data.items.asMap().entries.map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+      return PieChartSectionData(
+        value: item.total.toDouble(),
+        color: _incomeChartColors[index % _incomeChartColors.length],
+        radius: 42,
+        title: '',
+        showTitle: false,
+      );
+    }).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ...data.items.map(
-          (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _IncomeRow(item: item),
+        SizedBox(
+          height: 180,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 5,
+                child: PieChart(
+                  PieChartData(
+                    sectionsSpace: 2,
+                    centerSpaceRadius: 36,
+                    sections: sections,
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: data.items.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
+                    final color =
+                        _incomeChartColors[index % _incomeChartColors.length];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: _IncomeLegendRow(
+                        color: color,
+                        label: item.kategori,
+                        percent: item.persentaseDariTotal,
+                        isTerbesar: item.isTerbesar,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
         ),
-        const Divider(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
             Expanded(
               child: Text(
                 'Total',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTextStyles.headingSmall(AppColors.textPrimary),
               ),
             ),
             Text(
               formatRupiah(data.grandTotal),
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.money(AppColors.textPrimary),
             ),
           ],
         ),
@@ -52,63 +102,44 @@ class IncomeSection extends StatelessWidget {
   }
 }
 
-class _IncomeRow extends StatelessWidget {
-  const _IncomeRow({required this.item});
+class _IncomeLegendRow extends StatelessWidget {
+  const _IncomeLegendRow({
+    required this.color,
+    required this.label,
+    required this.percent,
+    required this.isTerbesar,
+  });
 
-  final IncomeItem item;
+  final Color color;
+  final String label;
+  final double percent;
+  final bool isTerbesar;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final barColor =
-        item.isTerbesar ? theme.colorScheme.primary : theme.colorScheme.tertiary;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                item.kategori,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: item.isTerbesar ? FontWeight.w700 : null,
-                ),
-              ),
-            ),
-            if (item.isTerbesar)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Terbesar',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          '${formatRupiah(item.total)} · '
-          '${item.persentaseDariTotal.toStringAsFixed(1)}%',
-          style: theme.textTheme.bodySmall,
-        ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: (item.persentaseDariTotal / 100).clamp(0.0, 1.0),
-            minHeight: 6,
-            color: barColor,
-            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
           ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            label,
+            style: AppTextStyles.bodyMedium(AppColors.textPrimary).copyWith(
+              fontWeight: isTerbesar ? FontWeight.w600 : FontWeight.w400,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Text(
+          '${percent.toStringAsFixed(1)}%',
+          style: AppTextStyles.labelMedium(AppColors.textSecondary),
         ),
       ],
     );

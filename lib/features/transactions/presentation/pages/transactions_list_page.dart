@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../../../shared/widgets/async_value_widget.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
@@ -152,19 +153,35 @@ class _TransactionsListPageState extends ConsumerState<TransactionsListPage> {
         ref.read(transactionsListProvider(_filter).notifier).hasMore;
 
     return Scaffold(
+      backgroundColor: AppColors.bgPrimary,
       appBar: AppBar(
         title: const Text('Transaksi'),
+        backgroundColor: AppColors.bgPrimary,
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.sm),
+            child: Material(
+              color: AppColors.accentBlueSoft,
+              borderRadius: AppRadius.circular,
+              child: InkWell(
+                onTap: () => context.push('/transactions/new?type=pengeluaran'),
+                borderRadius: AppRadius.circular,
+                child: const Padding(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  child: Icon(
+                    Icons.add,
+                    color: AppColors.accentBlue,
+                  ),
+                ),
+              ),
+            ),
+          ),
           IconButton(
             tooltip: 'Reset filter',
             onPressed: () => _updateFilter(const TransactionsFilter()),
             icon: const Icon(Icons.filter_alt_off_outlined),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/transactions/new?type=pengeluaran'),
-        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
@@ -215,7 +232,7 @@ class _TransactionsListPageState extends ConsumerState<TransactionsListPage> {
                   return ListView.separated(
                     controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpacing.lg),
                     itemCount: transactions.length +
                         ((_isLoadingMore ||
                                 (hasMore &&
@@ -224,11 +241,11 @@ class _TransactionsListPageState extends ConsumerState<TransactionsListPage> {
                             ? 1
                             : 0),
                     separatorBuilder: (context, index) =>
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       if (index >= transactions.length) {
                         return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
                           child: Center(child: CircularProgressIndicator()),
                         );
                       }
@@ -289,98 +306,100 @@ class _FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: onDateRangeTap,
-                    icon: const Icon(Icons.date_range_outlined, size: 18),
-                    label: Text(
-                      _dateRangeLabel(),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+    return AppCard.subtle(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.md,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onDateRangeTap,
+                  icon: const Icon(Icons.date_range_outlined, size: 18),
+                  label: Text(
+                    _dateRangeLabel(),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (filter.from != null || filter.to != null) ...[
-                  const SizedBox(width: 8),
-                  IconButton(
-                    tooltip: 'Hapus filter tanggal',
-                    onPressed: onClearDateRange,
-                    icon: const Icon(Icons.close, size: 18),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String?>(
-                    key: ValueKey('kategori-${filter.kategori}'),
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Kategori',
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                    initialValue: filter.kategori,
-                    items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text('Semua kategori'),
-                      ),
-                      ...categories.map(
-                        (category) => DropdownMenuItem<String?>(
-                          value: category,
-                          child: Text(category),
-                        ),
-                      ),
-                    ],
-                    onChanged: onKategoriChanged,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: DropdownButtonFormField<String?>(
-                    key: ValueKey('account-${filter.accountId}'),
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Rekening',
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                    initialValue: filter.accountId,
-                    items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text('Semua rekening'),
-                      ),
-                      ...accounts.map(
-                        (account) => DropdownMenuItem<String?>(
-                          value: account.id,
-                          child: Text(account.nama),
-                        ),
-                      ),
-                    ],
-                    onChanged: onAccountChanged,
-                  ),
+              ),
+              if (filter.from != null || filter.to != null) ...[
+                const SizedBox(width: AppSpacing.sm),
+                IconButton(
+                  tooltip: 'Hapus filter tanggal',
+                  onPressed: onClearDateRange,
+                  icon: const Icon(Icons.close, size: 18),
                 ),
               ],
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  key: ValueKey('kategori-${filter.kategori}'),
+                  isExpanded: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Kategori',
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.sm,
+                    ),
+                  ),
+                  initialValue: filter.kategori,
+                  items: [
+                    const DropdownMenuItem<String?>(
+                      value: null,
+                      child: Text('Semua kategori'),
+                    ),
+                    ...categories.map(
+                      (category) => DropdownMenuItem<String?>(
+                        value: category,
+                        child: Text(category),
+                      ),
+                    ),
+                  ],
+                  onChanged: onKategoriChanged,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  key: ValueKey('account-${filter.accountId}'),
+                  isExpanded: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Rekening',
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.sm,
+                    ),
+                  ),
+                  initialValue: filter.accountId,
+                  items: [
+                    const DropdownMenuItem<String?>(
+                      value: null,
+                      child: Text('Semua rekening'),
+                    ),
+                    ...accounts.map(
+                      (account) => DropdownMenuItem<String?>(
+                        value: account.id,
+                        child: Text(account.nama),
+                      ),
+                    ),
+                  ],
+                  onChanged: onAccountChanged,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -399,22 +418,29 @@ class _TransactionTile extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
-  Color _typeColor(BuildContext context) {
+  (Color soft, Color accent) _avatarColors() {
     return switch (transaction.type) {
-      TransactionType.pendapatan => Theme.of(context).colorScheme.primary,
-      TransactionType.pengeluaran => Theme.of(context).colorScheme.error,
-      TransactionType.transfer => Theme.of(context).colorScheme.tertiary,
-      _ => Theme.of(context).colorScheme.onSurfaceVariant,
+      TransactionType.pendapatan => (
+          AppColors.brandSoft,
+          AppColors.brandPrimary,
+        ),
+      TransactionType.pengeluaran => (
+          AppColors.backgroundSubtle,
+          AppColors.textSecondary,
+        ),
+      TransactionType.transfer => (
+          AppColors.accentBlueSoft,
+          AppColors.accentBlue,
+        ),
+      _ => (AppColors.backgroundSubtle, AppColors.textMuted),
     };
   }
 
-  IconData _typeIcon() {
-    return switch (transaction.type) {
-      TransactionType.pendapatan => Icons.arrow_downward_rounded,
-      TransactionType.pengeluaran => Icons.arrow_upward_rounded,
-      TransactionType.transfer => Icons.swap_horiz_rounded,
-      _ => Icons.receipt_long_outlined,
-    };
+  String _monogram() {
+    final label = transaction.kategori?.trim().isNotEmpty == true
+        ? transaction.kategori!.trim()
+        : transaction.type.label;
+    return label[0].toUpperCase();
   }
 
   String _accountLabel() {
@@ -442,9 +468,31 @@ class _TransactionTile extends StatelessWidget {
     return DateFormat('dd MMM yyyy', 'id_ID').format(date);
   }
 
+  String _amountLabel() {
+    final amount = formatRupiah(transaction.nominal);
+    return switch (transaction.type) {
+      TransactionType.pendapatan => '▲ +$amount',
+      TransactionType.pengeluaran => '▼ -$amount',
+      TransactionType.transfer => '-$amount',
+      _ => amount,
+    };
+  }
+
+  Color _amountColor() {
+    return switch (transaction.type) {
+      TransactionType.pendapatan => AppColors.brandPrimary,
+      TransactionType.pengeluaran => AppColors.textSecondary,
+      TransactionType.transfer => AppColors.textSecondary,
+      _ => AppColors.textPrimary,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    final color = _typeColor(context);
+    final (softColor, accentColor) = _avatarColors();
+    final title = transaction.kategori?.isNotEmpty == true
+        ? transaction.kategori!
+        : transaction.type.label;
 
     return Dismissible(
       key: ValueKey(transaction.id),
@@ -455,44 +503,67 @@ class _TransactionTile extends StatelessWidget {
       },
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(right: AppSpacing.xl),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.dangerNewSoft,
+          borderRadius: AppRadius.circular,
         ),
         child: Icon(
           Icons.delete_outline,
-          color: Theme.of(context).colorScheme.onErrorContainer,
+          color: AppColors.dangerPrimary,
         ),
       ),
-      child: Card(
-        child: ListTile(
-          onTap: onTap,
-          leading: CircleAvatar(
-            backgroundColor: color.withValues(alpha: 0.12),
-            child: Icon(_typeIcon(), color: color, size: 20),
-          ),
-          title: Text(
-            transaction.kategori?.isNotEmpty == true
-                ? transaction.kategori!
-                : transaction.type.label,
-          ),
-          subtitle: Text(
-            [
-              _formatTanggal(),
-              _accountLabel(),
-              if (transaction.rincian?.isNotEmpty == true) transaction.rincian!,
-            ].join(' · '),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: Text(
-            formatRupiah(transaction.nominal),
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: color,
+      child: AppCard.subtle(
+        onTap: onTap,
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Row(
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: softColor,
+                borderRadius: AppRadius.circular,
+              ),
+              child: SizedBox(
+                width: 44,
+                height: 44,
+                child: Center(
+                  child: Text(
+                    _monogram(),
+                    style: AppTextStyles.headingSmall(accentColor),
+                  ),
                 ),
-          ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    [
+                      _formatTanggal(),
+                      _accountLabel(),
+                      if (transaction.rincian?.isNotEmpty == true)
+                        transaction.rincian!,
+                    ].join(' · '),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodySmall(AppColors.textMuted),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              _amountLabel(),
+              style: AppTextStyles.money(_amountColor()),
+            ),
+          ],
         ),
       ),
     );

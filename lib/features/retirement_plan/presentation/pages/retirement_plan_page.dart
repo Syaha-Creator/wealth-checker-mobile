@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../../../shared/widgets/async_value_widget.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
@@ -15,7 +16,11 @@ class RetirementPlanPage extends ConsumerWidget {
     final planAsync = ref.watch(retirementPlanProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Rencana Pensiun')),
+      backgroundColor: AppColors.bgPrimary,
+      appBar: AppBar(
+        title: const Text('Rencana Pensiun & Warisan'),
+        backgroundColor: AppColors.bgPrimary,
+      ),
       body: AsyncValueWidget<RetirementPlan>(
         value: planAsync,
         onRetry: () => ref.invalidate(retirementPlanProvider),
@@ -35,10 +40,10 @@ class RetirementPlanPage extends ConsumerWidget {
           }
 
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             children: [
               _SummaryCard(plan: data),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               _SectionCard(
                 title: 'Target Dana',
                 child: Column(
@@ -85,7 +90,7 @@ class RetirementPlanPage extends ConsumerWidget {
                 title: 'Pelunasan Utang',
                 child: _DebtPayoffSection(payoff: data.debtPayoff!),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               _SectionCard(
                 title: 'Untung/Rugi Terealisasi',
                 child: Column(
@@ -130,51 +135,42 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    return AppCard.subtle(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
             Text(
               'Sisa uang bulanan',
-              style: theme.textTheme.bodyMedium,
+              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               formatRupiah(plan.sisaUangBulanan ?? 0),
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTextStyles.headingMedium(AppColors.textPrimary),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               'Dana terkumpul saat ini',
-              style: theme.textTheme.bodyMedium,
+              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               formatRupiah(plan.danaTerkumpulSaatIni ?? 0),
-              style: theme.textTheme.titleMedium,
+              style: AppTextStyles.money(AppColors.textPrimary),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               'Selisih menuju target',
-              style: theme.textTheme.bodyMedium,
+              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               formatRupiah(plan.selisihMenujuTarget ?? 0),
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.money(AppColors.brandPrimary),
             ),
           ],
         ),
-      ),
     );
   }
 }
@@ -304,22 +300,18 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            child,
-          ],
-        ),
+    return AppCard.subtle(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          child,
+        ],
       ),
     );
   }

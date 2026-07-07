@@ -70,7 +70,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Rencana Pensiun'), findsOneWidget);
+      expect(find.text('Rencana Pensiun & Warisan'), findsOneWidget);
       expect(find.textContaining('-2 tahun (sudah terlewat)'), findsOneWidget);
 
       final scrollable = find.byType(Scrollable).first;

@@ -47,11 +47,11 @@ void main() {
       // The Sprint 9b sections live below the fold of the lazy ListView.
       final scrollable = find.byType(Scrollable).first;
       await tester.scrollUntilVisible(
-        find.text('Budget vs Aktual'),
+        find.text('Anggaran vs Aktual'),
         200,
         scrollable: scrollable,
       );
-      expect(find.text('Budget vs Aktual'), findsOneWidget);
+      expect(find.text('Anggaran vs Aktual'), findsOneWidget);
       await tester.scrollUntilVisible(
         find.text('Dana Darurat'),
         200,
@@ -59,12 +59,12 @@ void main() {
       );
       expect(find.text('Dana Darurat'), findsOneWidget);
       await tester.scrollUntilVisible(
-        find.text('Pemasukan'),
+        find.text('Sumber Pemasukan'),
         200,
         scrollable: scrollable,
       );
       expect(find.text('Kebutuhan Pokok'), findsWidgets);
-      expect(find.text('Pemasukan'), findsOneWidget);
+      expect(find.text('Sumber Pemasukan'), findsOneWidget);
     });
 
     testWidgets('initial load sends bulan ini from/to before user interaction',

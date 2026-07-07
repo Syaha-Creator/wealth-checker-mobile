@@ -3,11 +3,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../../../shared/widgets/async_value_widget.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
 import '../../data/models/dream_goal.dart';
 import '../providers/dream_goals_list_provider.dart';
+
+class _GoalTint {
+  const _GoalTint({required this.soft, required this.accent});
+
+  final Color soft;
+  final Color accent;
+}
+
+const _goalTints = [
+  _GoalTint(soft: AppColors.accentBlueSoft, accent: AppColors.accentBlue),
+  _GoalTint(soft: AppColors.brandSoft, accent: AppColors.brandPrimary),
+  _GoalTint(soft: AppColors.investPurpleSoft, accent: AppColors.investPurple),
+  _GoalTint(soft: AppColors.amberAccentSoft, accent: AppColors.amberAccent),
+];
+
+_GoalTint _goalTintForIndex(int index) => _goalTints[index % _goalTints.length];
 
 class DreamGoalsPage extends ConsumerWidget {
   const DreamGoalsPage({super.key});
@@ -62,7 +79,11 @@ class DreamGoalsPage extends ConsumerWidget {
     final goalsAsync = ref.watch(dreamGoalsListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Target Impian')),
+      backgroundColor: AppColors.bgPrimary,
+      appBar: AppBar(
+        title: const Text('Target Impian'),
+        backgroundColor: AppColors.bgPrimary,
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/dream-goals/new'),
         icon: const Icon(Icons.add),
@@ -80,8 +101,9 @@ class DreamGoalsPage extends ConsumerWidget {
             if (goals.isEmpty) {
               return ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 children: [
-                  const SizedBox(height: 80),
+                  const SizedBox(height: AppSpacing.xxl),
                   EmptyStateWidget(
                     icon: Icons.flag_outlined,
                     title: 'Belum ada impian',
@@ -97,15 +119,52 @@ class DreamGoalsPage extends ConsumerWidget {
               );
             }
 
+            final activeGoals =
+                goals.where((goal) => !goal.tercapai).length;
+            final totalCollected = goals.fold<int>(
+              0,
+              (sum, goal) => sum + goal.saldoSaatIni,
+            );
+
             return ListView.separated(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.sm,
+                AppSpacing.lg,
+                AppSpacing.xxl * 2,
+              ),
               itemCount: goals.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 8),
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: AppSpacing.md),
               itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _DreamGoalsSummaryHeader(
+                        activeCount: activeGoals,
+                        totalCollected: totalCollected,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      _DreamGoalCard(
+                        goal: goals[index],
+                        tint: _goalTintForIndex(index),
+                        onEdit: () => context.push(
+                          '/dream-goals/${goals[index].id}/edit',
+                          extra: goals[index],
+                        ),
+                        onDelete: () =>
+                            _confirmDelete(context, ref, goals[index]),
+                      ),
+                    ],
+                  );
+                }
+
                 final goal = goals[index];
                 return _DreamGoalCard(
                   goal: goal,
+                  tint: _goalTintForIndex(index),
                   onEdit: () => context.push(
                     '/dream-goals/${goal.id}/edit',
                     extra: goal,
@@ -121,99 +180,169 @@ class DreamGoalsPage extends ConsumerWidget {
   }
 }
 
+class _DreamGoalsSummaryHeader extends StatelessWidget {
+  const _DreamGoalsSummaryHeader({
+    required this.activeCount,
+    required this.totalCollected,
+  });
+
+  final int activeCount;
+  final int totalCollected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '$activeCount impian aktif · ${formatRupiah(totalCollected)} terkumpul',
+      style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+    );
+  }
+}
+
 class _DreamGoalCard extends StatelessWidget {
   const _DreamGoalCard({
     required this.goal,
+    required this.tint,
     required this.onEdit,
     required this.onDelete,
   });
 
   final DreamGoal goal;
+  final _GoalTint tint;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final progress = (goal.persentase / 100).clamp(0.0, 1.0);
+    final percentLabel = '${goal.persentase.toStringAsFixed(0)}%';
 
-    return Card(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: tint.soft,
+        borderRadius: AppRadius.circular,
+        boxShadow: AppShadows.shadowSm,
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: AppRadius.circular,
+                    boxShadow: AppShadows.shadowSm,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    child: Icon(
+                      goal.tercapai ? Icons.emoji_events_outlined : Icons.flag_outlined,
+                      color: tint.accent,
+                      size: 22,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              goal.namaGoal,
+                              style: AppTextStyles.headingSmall(
+                                AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                          if (goal.tercapai)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                                vertical: AppSpacing.xs,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.white.withValues(alpha: 0.7),
+                                borderRadius: AppRadius.circular,
+                              ),
+                              child: Text(
+                                'Tercapai',
+                                style: AppTextStyles.labelMedium(
+                                  AppColors.brandPrimary,
+                                ),
+                              ),
+                            ),
+                          PopupMenuButton<String>(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(
+                              Icons.more_horiz,
+                              color: AppColors.textMuted,
+                            ),
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                onEdit();
+                              } else if (value == 'delete') {
+                                onDelete();
+                              }
+                            },
+                            itemBuilder: (context) => const [
+                              PopupMenuItem(value: 'edit', child: Text('Edit')),
+                              PopupMenuItem(
+                                value: 'delete',
+                                child: Text('Hapus'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        '${formatRupiah(goal.saldoSaatIni)} dari '
+                        '${formatRupiah(goal.targetNominal)}',
+                        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: 0.75),
+                    borderRadius: AppRadius.circular,
+                  ),
                   child: Text(
-                    goal.namaGoal,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    percentLabel,
+                    style: AppTextStyles.labelMedium(tint.accent).copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                if (goal.tercapai)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.green.withValues(alpha: 0.4),
-                      ),
-                    ),
-                    child: Text(
-                      'Tercapai',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.green.shade700,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      onEdit();
-                    } else if (value == 'delete') {
-                      onDelete();
-                    }
-                  },
-                  itemBuilder: (context) => const [
-                    PopupMenuItem(value: 'edit', child: Text('Edit')),
-                    PopupMenuItem(value: 'delete', child: Text('Hapus')),
-                  ],
-                ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              '${formatRupiah(goal.saldoSaatIni)} / ${formatRupiah(goal.targetNominal)}',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.md),
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: AppRadius.circular,
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 8,
-                backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                color: tint.accent,
+                backgroundColor: AppColors.white.withValues(alpha: 0.6),
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              '${goal.persentase.toStringAsFixed(1)}% · '
-              'Sisa ${formatRupiah(goal.sisaMenujuTarget)}',
-              style: theme.textTheme.bodySmall,
-            ),
             if (goal.isLinkedToAccount) ...[
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'Terhubung ke rekening',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
+                style: AppTextStyles.bodySmall(tint.accent),
               ),
             ],
           ],
