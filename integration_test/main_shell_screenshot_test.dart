@@ -1,20 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'package:wealth_checker_mobile/main.dart' as app;
 
-const _testEmail = 'wc-txform-1783390317@example.com';
-const _testPassword = 'TestPass123!';
-
-Future<void> _login(WidgetTester tester) async {
-  final fields = find.byType(TextField);
-  await tester.enterText(fields.at(0), _testEmail);
-  await tester.enterText(fields.at(1), _testPassword);
-  await tester.tap(find.byType(ElevatedButton));
-  await tester.pumpAndSettle(const Duration(seconds: 30));
-  expect(find.text('Beranda'), findsOneWidget);
-}
+import 'screenshot_helpers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -23,19 +12,34 @@ void main() {
     app.main();
     await tester.pumpAndSettle(const Duration(seconds: 5));
 
-    await _login(tester);
-    await tester.pump(const Duration(seconds: 25));
+    await loginForScreenshots(tester);
+    expect(find.text('Beranda'), findsOneWidget);
 
-    await tester.tap(find.text('Impian'));
-    await tester.pumpAndSettle(const Duration(seconds: 8));
-    await tester.pump(const Duration(seconds: 15));
+    await waitForScreenReady(
+      tester,
+      readyFinder: find.textContaining('Kekayaan Bersih'),
+    );
+    await holdForHostScreenshot(tester, '03_beranda_simulator');
 
-    await tester.tap(find.text('Analitik'));
-    await tester.pumpAndSettle(const Duration(seconds: 8));
-    await tester.pump(const Duration(seconds: 15));
+    await tapNavTab(tester, 'Impian');
+    await waitForScreenReady(
+      tester,
+      readyFinder: find.text('Target Impian'),
+    );
+    await holdForHostScreenshot(tester, '04_tab_impian_simulator');
 
-    await tester.tap(find.text('Beranda'));
-    await tester.pumpAndSettle(const Duration(seconds: 8));
-    await tester.pump(const Duration(seconds: 25));
+    await tapNavTab(tester, 'Analitik');
+    await waitForScreenReady(
+      tester,
+      readyFinder: find.text('Analisa Keuangan'),
+    );
+    await holdForHostScreenshot(tester, '05_tab_analitik_simulator');
+
+    await tapNavTab(tester, 'Beranda');
+    await waitForScreenReady(
+      tester,
+      readyFinder: find.textContaining('Kekayaan Bersih'),
+    );
+    await holdForHostScreenshot(tester, '06_beranda_return_simulator');
   });
 }

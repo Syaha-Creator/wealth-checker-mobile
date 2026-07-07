@@ -4,17 +4,30 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEVICE="52E4A9C8-F67B-4065-B7B0-0FB01F0EA594"
 OUT="$ROOT/test/visual/manual"
+TEST="$ROOT/integration_test/visual_screenshot_test.dart"
+SIGNAL_PREFIX="@@SCREENSHOT@@:"
 
 mkdir -p "$OUT"
 
-flutter test "$ROOT/integration_test/visual_screenshot_test.dart" -d "$DEVICE" &
-TEST_PID=$!
+FIFO="$(mktemp -u "${TMPDIR:-/tmp}/wc_screenshot.XXXXXX")"
+mkfifo "$FIFO"
+trap 'rm -f "$FIFO"' EXIT
 
-sleep 100
-xcrun simctl io "$DEVICE" screenshot "$OUT/01_dashboard_simulator.png"
+flutter test "$TEST" -d "$DEVICE" >"$FIFO" 2>&1 &
+FLUTTER_PID=$!
 
-sleep 55
-xcrun simctl io "$DEVICE" screenshot "$OUT/02_transaction_form_simulator.png"
+while IFS= read -r line; do
+  printf '%s\n' "$line"
+  case "$line" in
+    *"${SIGNAL_PREFIX}"*)
+      stem="${line##*${SIGNAL_PREFIX}}"
+      stem="${stem//$'\r'/}"
+      xcrun simctl io "$DEVICE" screenshot "$OUT/${stem}.png"
+      echo "Captured $OUT/${stem}.png"
+      ;;
+  esac
+done <"$FIFO"
 
-wait "$TEST_PID"
+wait "$FLUTTER_PID"
+
 echo "Screenshots saved to $OUT"
