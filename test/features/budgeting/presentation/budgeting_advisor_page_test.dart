@@ -20,7 +20,7 @@ void main() {
       await tester.pumpWidget(_buildTestApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Budgeting Advisor'), findsOneWidget);
+      expect(find.text('Saran Budgeting'), findsOneWidget);
       expect(find.text('Rencana Pemasukan Bulanan'), findsOneWidget);
       expect(find.text('10000000'), findsOneWidget);
       expect(find.text('Rekomendasi Alokasi'), findsOneWidget);

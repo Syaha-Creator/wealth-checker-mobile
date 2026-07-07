@@ -86,7 +86,7 @@ class _BudgetingAdvisorPageState extends ConsumerState<BudgetingAdvisorPage> {
     planAsync.whenData(_prefillFromPlan);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Budgeting Advisor')),
+      appBar: AppBar(title: const Text('Saran Budgeting')),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(currentBudgetPlanProvider);
