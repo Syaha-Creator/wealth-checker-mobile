@@ -7,7 +7,7 @@ import '../../features/accounts/presentation/pages/account_form_page.dart';
 import '../../features/accounts/presentation/pages/account_mutation_page.dart';
 import '../../features/accounts/presentation/pages/accounts_list_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
-import '../../features/dashboard/presentation/pages/dashboard_page.dart';
+import '../../core/navigation/main_shell.dart';
 import '../../features/transactions/data/models/transaction.dart';
 import '../../features/transactions/presentation/pages/transaction_form_page.dart';
 import '../../features/transactions/presentation/pages/transactions_list_page.dart';
@@ -84,7 +84,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const DashboardPage(),
+        builder: (context, state) => const MainShell(),
       ),
       GoRoute(
         path: '/onboarding',

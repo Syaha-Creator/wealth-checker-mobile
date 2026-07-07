@@ -1,60 +1,320 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Color palette aligned with the Next.js web app (`globals.css`).
+/// Design-token primitives — do not use raw hex outside this file.
 abstract final class AppColors {
-  // Light mode
-  static const background = Color(0xFFF8FAFC);
-  static const backgroundSubtle = Color(0xFFF1F5F9);
-  static const surface = Color(0xFFFFFFFF);
-  static const surfaceHover = Color(0xFFF8FAFC);
-  static const border = Color(0xFFE2E8F0);
-  static const borderStrong = Color(0xFFCBD5E1);
-  static const textPrimary = Color(0xFF0F172A);
-  static const textSecondary = Color(0xFF475569);
-  static const textMuted = Color(0xFF94A3B8);
-  static const brand = Color(0xFF059669);
+  // Primitives
+  static const green500 = Color(0xFF059669);
+  static const green400 = Color(0xFF34D399);
+  static const green50 = Color(0xFFECFDF5);
+  static const blue500 = Color(0xFF3B82F6);
+  static const blue50 = Color(0xFFEFF6FF);
+  static const purple500 = Color(0xFF7C3AED);
+  static const purple300 = Color(0xFFA78BFA);
+  static const purple50 = Color(0xFFF5F3FF);
+  static const red500 = Color(0xFFEF4444);
+  static const red400 = Color(0xFFF87171);
+  static const amber500 = Color(0xFFF59E0B);
+  static const amber400 = Color(0xFFFBBF24);
+  static const gray900 = Color(0xFF0F172A);
+  static const gray700 = Color(0xFF334155);
+  static const gray500 = Color(0xFF64748B);
+  static const gray300 = Color(0xFFCBD5E1);
+  static const gray100 = Color(0xFFF1F5F9);
+  static const gray50 = Color(0xFFF8FAFC);
+  static const white = Color(0xFFFFFFFF);
+  static const charcoal900 = Color(0xFF0B1120);
+  static const charcoal800 = Color(0xFF131C2E);
+
+  static const dangerNew = Color(0xFFD64545);
+  static const dangerNewDark = Color(0xFFE8746C);
+  static const dangerNewSoft = Color(0xFFFBEAEA);
+
+  // Mockup v2 accent palette
+  static const accentBlue = Color(0xFF3E6FD9);
+  static const accentBlueDark = Color(0xFF6D93E8);
+  static const accentBlueSoft = Color(0xFFEAF0FD);
+  static const investPurple = Color(0xFF7B5FD9);
+  static const investPurpleDark = Color(0xFFA794EA);
+  static const investPurpleSoft = Color(0xFFF0EDFC);
+  static const amberAccent = Color(0xFFC97A1E);
+  static const amberAccentDark = Color(0xFFE0A344);
+  static const amberAccentSoft = Color(0xFFFBF0E1);
+
+  // Semantic — light mode
+  static const bgPrimary = gray50;
+  static const bgSurface = white;
+  static const bgBrandSoft = green50;
+  static const bgInfoSoft = blue50;
+  static const bgAccentSoft = purple50;
+  static const borderDefault = gray300;
+  static const textPrimary = gray900;
+  static const textSecondary = gray700;
+  static const textMuted = gray500;
+  static const brandPrimary = green500;
+  static const infoPrimary = blue500;
+  static const accentPrimary = purple500;
+  static const dangerPrimary = dangerNew;
+  static const warningPrimary = amberAccent;
+
+  // Backward-compatible aliases used across the app
+  static const background = bgPrimary;
+  static const backgroundSubtle = gray100;
+  static const surface = bgSurface;
+  static const surfaceHover = gray50;
+  static const border = borderDefault;
+  static const borderStrong = gray300;
+  static const brand = brandPrimary;
+  static const brandSoft = bgBrandSoft;
   static const brandHover = Color(0xFF047857);
   static const brandActive = Color(0xFF065F46);
-  static const brandSoft = Color(0xFFECFDF5);
-  static const danger = Color(0xFFEF4444);
+  static const danger = dangerPrimary;
   static const dangerHover = Color(0xFFDC2626);
-  static const warning = Color(0xFFF59E0B);
-  static const warningHover = Color(0xFFD97706);
-  static const info = Color(0xFF3B82F6);
-  static const infoSoft = Color(0xFFEFF6FF);
-  static const accentPurple = Color(0xFF7C3AED);
-  static const accentPurpleSoft = Color(0xFFF5F3FF);
+  static const warning = warningPrimary;
+  static const info = infoPrimary;
+  static const infoSoft = bgInfoSoft;
+  static const accentPurple = accentPrimary;
+  static const accentPurpleSoft = bgAccentSoft;
 
-  // Dark mode
-  static const backgroundDark = Color(0xFF0B1120);
-  static const backgroundSubtleDark = Color(0xFF0F172A);
-  static const surfaceDark = Color(0xFF131C2E);
+  // Dark mode (reserved)
+  static const backgroundDark = charcoal900;
+  static const backgroundSubtleDark = gray900;
+  static const surfaceDark = charcoal800;
   static const surfaceHoverDark = Color(0xFF1A2436);
   static const borderDark = Color(0xFF253349);
-  static const borderStrongDark = Color(0xFF334155);
-  static const textPrimaryDark = Color(0xFFF1F5F9);
+  static const borderStrongDark = gray700;
+  static const textPrimaryDark = gray100;
   static const textSecondaryDark = Color(0xFFB6C2D4);
-  static const textMutedDark = Color(0xFF64748B);
-  static const brandDark = Color(0xFF34D399);
+  static const textMutedDark = gray500;
+  static const brandDark = green400;
   static const brandHoverDark = Color(0xFF6EE7B7);
-  static const dangerDark = Color(0xFFF87171);
-  static const warningDark = Color(0xFFFBBF24);
-  static const accentPurpleDark = Color(0xFFA78BFA);
+  static const dangerDark = red400;
+  static const warningDark = amber400;
+  static const accentPurpleDark = purple300;
 }
 
-/// Reusable text styles for prominent numeric displays across the app.
+/// Strict spacing scale — only these values in layout code.
+abstract final class AppSpacing {
+  static const xs = 4.0;
+  static const sm = 8.0;
+  static const md = 12.0;
+  static const lg = 16.0;
+  static const xl = 24.0;
+  static const xxl = 32.0;
+}
+
+/// Single corner radius for cards, buttons, inputs, and chips.
+abstract final class AppRadius {
+  static const value = 12.0;
+  static const circular = BorderRadius.all(Radius.circular(value));
+}
+
+/// Brand-tinted and neutral shadows for card elevation variants.
+abstract final class AppShadows {
+  static const cardElevated = <BoxShadow>[
+    BoxShadow(
+      color: Color(0x0F059669), // green500 @ 0.06
+      offset: Offset(0, 2),
+      blurRadius: 4,
+    ),
+    BoxShadow(
+      color: Color(0x1A059669), // green500 @ 0.10
+      offset: Offset(0, 8),
+      blurRadius: 20,
+      spreadRadius: -4,
+    ),
+  ];
+
+  static const cardSubtle = <BoxShadow>[
+    BoxShadow(
+      color: Color.fromRGBO(20, 60, 40, 0.06),
+      offset: Offset(0, 1),
+      blurRadius: 2,
+    ),
+  ];
+
+  /// Default card shadow for mockup v2 — alias of [cardSubtle].
+  static const shadowSm = cardSubtle;
+}
+
+/// BoxDecoration helpers for card variants.
+abstract final class AppDecorations {
+  static BoxDecoration cardElevated({Color? color}) => BoxDecoration(
+        color: color ?? AppColors.bgSurface,
+        borderRadius: AppRadius.circular,
+        boxShadow: AppShadows.cardElevated,
+      );
+
+  static BoxDecoration cardSubtle({Color? color}) => BoxDecoration(
+        color: color ?? AppColors.bgSurface,
+        borderRadius: AppRadius.circular,
+        boxShadow: AppShadows.cardSubtle,
+      );
+}
+
+/// Premium fintech typography — Plus Jakarta Sans (bundled locally).
 abstract final class AppTextStyles {
+  static const fontFamily = 'Plus Jakarta Sans';
   static const _tabularFigures = [FontFeature.tabularFigures()];
 
-  static TextStyle heroNumber(Color color) {
-    return GoogleFonts.plusJakartaSans(
-      fontSize: 42,
-      fontWeight: FontWeight.w700,
-      letterSpacing: -0.5,
-      height: 1.1,
+  static TextStyle _base({
+    required double fontSize,
+    required FontWeight fontWeight,
+    required double height,
+    double? letterSpacing,
+    Color? color,
+    List<FontFeature>? fontFeatures,
+  }) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      height: height,
+      letterSpacing: letterSpacing,
       color: color,
-      fontFeatures: _tabularFigures,
+      fontFeatures: fontFeatures,
+    );
+  }
+
+  static TextStyle heroNumberCompact(Color color) => _base(
+        fontSize: 38,
+        fontWeight: FontWeight.w700,
+        height: 1.0,
+        letterSpacing: -0.5,
+        color: color,
+        fontFeatures: _tabularFigures,
+      );
+
+  /// Display/HeroNumber — net worth hero only.
+  static TextStyle heroNumber(Color color) => _base(
+        fontSize: 44,
+        fontWeight: FontWeight.w700,
+        height: 1.0,
+        letterSpacing: -0.5,
+        color: color,
+        fontFeatures: _tabularFigures,
+      );
+
+  /// Display/HeadingLarge
+  static TextStyle headingLarge(Color color) => _base(
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        height: 1.2,
+        letterSpacing: -0.25,
+        color: color,
+      );
+
+  /// Heading/Medium — section titles
+  static TextStyle headingMedium(Color color) => _base(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        color: color,
+      );
+
+  /// Heading/Small
+  static TextStyle headingSmall(Color color) => _base(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        color: color,
+      );
+
+  /// Body/Large
+  static TextStyle bodyLarge(Color color) => _base(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+        color: color,
+      );
+
+  /// Body/Medium
+  static TextStyle bodyMedium(Color color) => _base(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+        color: color,
+      );
+
+  /// Body/Small
+  static TextStyle bodySmall(Color color) => _base(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+        color: color,
+      );
+
+  /// Label/Medium
+  static TextStyle labelMedium(Color color) => _base(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        height: 1.3,
+        letterSpacing: 0.1,
+        color: color,
+      );
+
+  /// Money/Medium — transaction amounts, lists, forms.
+  static TextStyle money(Color color) => _base(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        height: 1.5,
+        color: color,
+        fontFeatures: _tabularFigures,
+      );
+}
+
+/// Card wrapper with explicit elevation variant — replaces default bordered Card.
+class AppCard extends StatelessWidget {
+  const AppCard.elevated({
+    super.key,
+    required this.child,
+    this.padding,
+    this.onTap,
+    this.color,
+  }) : _elevated = true;
+
+  const AppCard.subtle({
+    super.key,
+    required this.child,
+    this.padding,
+    this.onTap,
+    this.color,
+  }) : _elevated = false;
+
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final VoidCallback? onTap;
+  final Color? color;
+  final bool _elevated;
+
+  @override
+  Widget build(BuildContext context) {
+    final decoration = _elevated
+        ? AppDecorations.cardElevated(color: color)
+        : AppDecorations.cardSubtle(color: color);
+
+    final content = Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: child,
+    );
+
+    if (onTap == null) {
+      return DecoratedBox(
+        decoration: decoration,
+        child: content,
+      );
+    }
+
+    return DecoratedBox(
+      decoration: decoration,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.circular,
+          child: content,
+        ),
+      ),
     );
   }
 }
@@ -63,35 +323,35 @@ abstract final class AppTheme {
   static ThemeData get light => _buildTheme(
         brightness: Brightness.light,
         colorScheme: const ColorScheme.light(
-          primary: AppColors.brand,
-          onPrimary: Colors.white,
-          primaryContainer: AppColors.brandSoft,
+          primary: AppColors.brandPrimary,
+          onPrimary: AppColors.white,
+          primaryContainer: AppColors.bgBrandSoft,
           onPrimaryContainer: AppColors.brandActive,
           secondary: AppColors.textSecondary,
-          onSecondary: Colors.white,
-          surface: AppColors.surface,
+          onSecondary: AppColors.white,
+          surface: AppColors.bgSurface,
           onSurface: AppColors.textPrimary,
-          error: AppColors.danger,
-          onError: Colors.white,
-          outline: AppColors.border,
+          error: AppColors.dangerPrimary,
+          onError: AppColors.white,
+          outline: AppColors.borderDefault,
         ),
-        scaffoldBackground: AppColors.background,
-        appBarBackground: AppColors.surface,
+        scaffoldBackground: AppColors.bgPrimary,
+        appBarBackground: AppColors.bgSurface,
         appBarForeground: AppColors.textPrimary,
-        cardColor: AppColors.surface,
-        dividerColor: AppColors.border,
+        cardColor: AppColors.bgSurface,
+        dividerColor: AppColors.borderDefault,
         textPrimary: AppColors.textPrimary,
         textSecondary: AppColors.textSecondary,
         textMuted: AppColors.textMuted,
-        brand: AppColors.brand,
+        brand: AppColors.brandPrimary,
         brandHover: AppColors.brandHover,
-        danger: AppColors.danger,
+        danger: AppColors.dangerPrimary,
         dangerHover: AppColors.dangerHover,
-        warning: AppColors.warning,
-        info: AppColors.info,
-        accentPurple: AppColors.accentPurple,
-        infoSoft: AppColors.infoSoft,
-        accentPurpleSoft: AppColors.accentPurpleSoft,
+        warning: AppColors.warningPrimary,
+        info: AppColors.infoPrimary,
+        accentPurple: AppColors.accentPrimary,
+        infoSoft: AppColors.bgInfoSoft,
+        accentPurpleSoft: AppColors.bgAccentSoft,
       );
 
   static ThemeData get dark => _buildTheme(
@@ -122,10 +382,10 @@ abstract final class AppTheme {
         danger: AppColors.dangerDark,
         dangerHover: AppColors.dangerDark,
         warning: AppColors.warningDark,
-        info: AppColors.info,
+        info: AppColors.infoPrimary,
         accentPurple: AppColors.accentPurpleDark,
-        infoSoft: Color(0xFF1E3A8A),
-        accentPurpleSoft: Color(0xFF4C1D95),
+        infoSoft: const Color(0xFF1E3A8A),
+        accentPurpleSoft: const Color(0xFF4C1D95),
       );
 
   static ThemeData _buildTheme({
@@ -160,18 +420,19 @@ abstract final class AppTheme {
           displayColor: textPrimary,
         )
         .copyWith(
-          bodyMedium: GoogleFonts.plusJakartaSans(color: textSecondary),
-          bodySmall: GoogleFonts.plusJakartaSans(color: textMuted),
-          labelLarge: GoogleFonts.plusJakartaSans(
-            color: textPrimary,
-            fontWeight: FontWeight.w600,
-          ),
+          displayLarge: AppTextStyles.headingLarge(textPrimary),
+          titleMedium: AppTextStyles.headingMedium(textPrimary),
+          titleSmall: AppTextStyles.headingSmall(textPrimary),
+          bodyLarge: AppTextStyles.bodyLarge(textPrimary),
+          bodyMedium: AppTextStyles.bodyMedium(textSecondary),
+          bodySmall: AppTextStyles.bodySmall(textMuted),
+          labelLarge: AppTextStyles.labelMedium(textPrimary),
         );
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: 'Plus Jakarta Sans',
+      fontFamily: AppTextStyles.fontFamily,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: scaffoldBackground,
       dividerColor: dividerColor,
@@ -182,28 +443,30 @@ abstract final class AppTheme {
         backgroundColor: appBarBackground,
         foregroundColor: appBarForeground,
         surfaceTintColor: Colors.transparent,
-        titleTextStyle: textTheme.titleLarge?.copyWith(color: appBarForeground),
+        titleTextStyle: AppTextStyles.headingSmall(appBarForeground),
       ),
       cardTheme: CardThemeData(
         color: cardColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: dividerColor),
+          borderRadius: AppRadius.circular,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: brand,
           foregroundColor: brightness == Brightness.light
-              ? Colors.white
+              ? AppColors.white
               : AppColors.backgroundDark,
           disabledBackgroundColor: textMuted.withValues(alpha: 0.3),
           disabledForegroundColor: textMuted,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: AppRadius.circular,
           ),
         ).copyWith(
           backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -221,9 +484,12 @@ abstract final class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: textPrimary,
           side: BorderSide(color: dividerColor),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: AppRadius.circular,
           ),
         ),
       ),
@@ -235,46 +501,53 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: cardColor,
-        hintStyle: TextStyle(color: textMuted),
-        labelStyle: TextStyle(color: textSecondary),
+        hintStyle: AppTextStyles.bodyMedium(textMuted),
+        labelStyle: AppTextStyles.labelMedium(textSecondary),
+        prefixStyle: AppTextStyles.money(textPrimary),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: AppRadius.circular,
           borderSide: BorderSide(color: dividerColor),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: AppRadius.circular,
           borderSide: BorderSide(color: dividerColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: AppRadius.circular,
           borderSide: BorderSide(color: brand, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: AppRadius.circular,
           borderSide: BorderSide(color: danger),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: AppRadius.circular,
           borderSide: BorderSide(color: dangerHover, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: brand,
         foregroundColor: brightness == Brightness.light
-            ? Colors.white
+            ? AppColors.white
             : AppColors.backgroundDark,
         elevation: 2,
+        shape: const RoundedRectangleBorder(
+          borderRadius: AppRadius.circular,
+        ),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: textPrimary,
         contentTextStyle: TextStyle(
           color: brightness == Brightness.light
-              ? AppColors.surface
+              ? AppColors.bgSurface
               : AppColors.textPrimaryDark,
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.circular),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: brand),
       extensions: [
@@ -289,7 +562,7 @@ abstract final class AppTheme {
               ? AppColors.borderStrong
               : AppColors.borderStrongDark,
           textMuted: textMuted,
-          brandSoft: AppColors.brandSoft,
+          brandSoft: AppColors.bgBrandSoft,
           danger: danger,
           dangerHover: dangerHover,
           warning: warning,

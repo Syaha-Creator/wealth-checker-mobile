@@ -12,6 +12,8 @@ import 'package:wealth_checker_mobile/features/accounts/data/models/account.dart
 import 'package:wealth_checker_mobile/features/accounts/presentation/providers/accounts_list_provider.dart';
 import 'package:wealth_checker_mobile/features/auth/data/auth_repository.dart';
 import 'package:wealth_checker_mobile/features/auth/presentation/pages/login_page.dart';
+import 'package:wealth_checker_mobile/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:wealth_checker_mobile/features/dashboard/data/models/wealth_history_point.dart';
 import 'package:wealth_checker_mobile/features/dashboard/data/models/monthly_cash_flow.dart';
 import 'package:wealth_checker_mobile/features/dashboard/data/models/wealth_summary.dart';
 import 'package:wealth_checker_mobile/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -164,7 +166,7 @@ void main() {
       );
     });
 
-    testWidgets('dashboard breakdown colors', (tester) async {
+    testWidgets('dashboard beranda layout', (tester) async {
       tester.view.physicalSize = const Size(400, 1400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -174,7 +176,8 @@ void main() {
         ProviderScope(
           overrides: [
             wealthSummaryProvider.overrideWith((_) async => _sampleSummary),
-            monthlyCashFlowProvider.overrideWith((_) async => _sampleCashFlow),
+            wealthHistoryProvider.overrideWith((_) async => _sampleWealthHistory),
+            accountsListProvider.overrideWith(_SuccessAccountsList.new),
           ],
           child: MaterialApp(
             theme: AppTheme.light,
@@ -188,11 +191,12 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
 
       await expectLater(
         find.byType(DashboardPage),
-        matchesGoldenFile('goldens/dashboard_breakdown_colors.png'),
+        matchesGoldenFile('goldens/dashboard_beranda.png'),
       );
     });
   });
@@ -306,6 +310,15 @@ const _sampleSummary = WealthSummary(
   kekayaanBersih: 42500000,
   wealthLevel: 2,
   wealthLevelName: 'Terlihat Kaya',
+);
+
+const _sampleWealthHistory = WealthHistory(
+  delta: 2500000,
+  history: [
+    WealthHistoryPoint(tanggal: '2026-05-01', kekayaanBersih: 40000000),
+    WealthHistoryPoint(tanggal: '2026-06-01', kekayaanBersih: 41000000),
+    WealthHistoryPoint(tanggal: '2026-07-01', kekayaanBersih: 42500000),
+  ],
 );
 
 const _sampleCashFlow = MonthlyCashFlow(
