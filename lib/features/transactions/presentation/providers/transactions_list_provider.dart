@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/transaction.dart';
 import '../../data/models/transaction_categories.dart';
 import '../../data/transactions_repository.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
 import '../../../accounts/presentation/providers/accounts_list_provider.dart';
 
@@ -50,6 +51,7 @@ class TransactionsList extends _$TransactionsList {
   Future<void> refreshAfterMutation() async {
     ref.invalidateSelf();
     ref.invalidate(wealthSummaryProvider);
+    ref.invalidate(emergencyFundProvider);
     ref.invalidate(monthlyCashFlowProvider);
     ref.invalidate(accountsListProvider);
   }

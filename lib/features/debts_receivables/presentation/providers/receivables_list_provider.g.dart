@@ -33,7 +33,7 @@ final class ReceivablesListProvider
   ReceivablesList create() => ReceivablesList();
 }
 
-String _$receivablesListHash() => r'68da678b8ac8bab331b971e584cc37549a40ec9b';
+String _$receivablesListHash() => r'de013b43c09343d57f396bacdf2302c3265a797b';
 
 abstract class _$ReceivablesList extends $AsyncNotifier<List<Receivable>> {
   FutureOr<List<Receivable>> build();

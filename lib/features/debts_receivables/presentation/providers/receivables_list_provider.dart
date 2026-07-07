@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../data/debts_repository.dart';
 import '../../data/models/receivable.dart';
 
@@ -45,5 +46,6 @@ class ReceivablesList extends _$ReceivablesList {
   void _refreshAfterMutation() {
     ref.invalidateSelf();
     ref.invalidate(wealthSummaryProvider);
+    ref.invalidate(emergencyFundProvider);
   }
 }

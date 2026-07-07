@@ -10,6 +10,9 @@ import 'package:wealth_checker_mobile/core/network/api_exception.dart';
 import 'package:wealth_checker_mobile/core/theme/app_theme.dart';
 import 'package:wealth_checker_mobile/features/accounts/data/models/account.dart';
 import 'package:wealth_checker_mobile/features/accounts/presentation/providers/accounts_list_provider.dart';
+import 'package:wealth_checker_mobile/features/analytics/data/analytics_repository.dart';
+import 'package:wealth_checker_mobile/features/analytics/data/models/emergency_fund.dart';
+import 'package:wealth_checker_mobile/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:wealth_checker_mobile/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:wealth_checker_mobile/features/dashboard/data/models/monthly_cash_flow.dart';
 import 'package:wealth_checker_mobile/features/dashboard/data/models/wealth_summary.dart';
@@ -121,6 +124,76 @@ void main() {
       );
       expect(repository.createCalls, 1);
     });
+
+    testWidgets('invalidates emergencyFundProvider after successful submit',
+        (tester) async {
+      final repository = _RecordingTransactionsRepository();
+      final analyticsRepo = _RecordingAnalyticsRepository();
+
+      final container = ProviderContainer(
+        overrides: [
+          transactionsRepositoryProvider.overrideWith((_) => repository),
+          analyticsRepositoryProvider.overrideWith((_) => analyticsRepo),
+          accountsListProvider.overrideWith(_SuccessAccountsList.new),
+          transactionCategoriesProvider.overrideWith(
+            (_) async => const TransactionCategories(
+              pengeluaran: ['Makanan', 'Transportasi'],
+            ),
+          ),
+          wealthSummaryProvider.overrideWith((_) async => _sampleSummary),
+          monthlyCashFlowProvider.overrideWith((_) async => _sampleCashFlow),
+          transactionsListProvider(const TransactionsFilter())
+              .overrideWith(_EmptyTransactionsList.new),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(emergencyFundProvider.future);
+      expect(analyticsRepo.emergencyFundCalls, 1);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.light,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('id')],
+            home: const TransactionFormPage(type: TransactionType.pengeluaran),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final nominalField = find.byWidgetPredicate(
+        (widget) =>
+            widget is FormBuilderTextField &&
+            widget.decoration.labelText == 'Nominal',
+      );
+      await tester.enterText(nominalField, '50000');
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is DropdownButtonFormField<String> ||
+              widget.toString().contains('FormBuilderDropdown'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BCA Tabungan (Rp 1.500.000)').last);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Catat'));
+      await tester.pumpAndSettle();
+
+      expect(repository.createCalls, 1);
+      await container.read(emergencyFundProvider.future);
+      expect(analyticsRepo.emergencyFundCalls, 2);
+    });
   });
 }
 
@@ -211,6 +284,22 @@ class _RecordingTransactionsRepository extends TransactionsRepository {
       toAccountId: toAccountId,
       nominal: nominal ?? 0,
       createdAt: '2026-07-01T00:00:00.000Z',
+    );
+  }
+}
+
+class _RecordingAnalyticsRepository extends AnalyticsRepository {
+  _RecordingAnalyticsRepository() : super(_ThrowingDio());
+
+  int emergencyFundCalls = 0;
+
+  @override
+  Future<EmergencyFund> getEmergencyFund() async {
+    emergencyFundCalls++;
+    return const EmergencyFund(
+      danaDarurat: 15000000,
+      status: 'cukup',
+      bulanTertanggung: 5.5,
     );
   }
 }

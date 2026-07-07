@@ -5,6 +5,7 @@ import '../../../../core/network/api_exception.dart';
 import '../../../accounts/data/accounts_repository.dart';
 import '../../../assets/data/assets_repository.dart';
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../../debts_receivables/data/debts_repository.dart';
 import '../../data/models/onboarding_entries.dart';
 import '../../data/profile_repository.dart';
@@ -135,6 +136,7 @@ class OnboardingWizard extends _$OnboardingWizard {
       final completedStep = state.currentStepIndex;
       if (completedStep >= onboardingStepCount - 1) {
         ref.invalidate(wealthSummaryProvider);
+        ref.invalidate(emergencyFundProvider);
         state = state.copyWith(
           submitStatus: OnboardingSubmitStatus.success,
         );

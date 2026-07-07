@@ -33,7 +33,7 @@ final class DebtsListProvider
   DebtsList create() => DebtsList();
 }
 
-String _$debtsListHash() => r'837e508d88fb3b7a626caf5d6c10e770c7e6b93b';
+String _$debtsListHash() => r'e65ad527e5a4ec1e394a1cc0533ae2389a2c69ea';
 
 abstract class _$DebtsList extends $AsyncNotifier<List<Debt>> {
   FutureOr<List<Debt>> build();

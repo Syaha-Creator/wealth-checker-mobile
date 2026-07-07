@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../data/accounts_repository.dart';
 import '../../data/models/account.dart';
 
@@ -46,5 +47,6 @@ class AccountsList extends _$AccountsList {
   void _refreshAfterMutation() {
     ref.invalidateSelf();
     ref.invalidate(wealthSummaryProvider);
+    ref.invalidate(emergencyFundProvider);
   }
 }

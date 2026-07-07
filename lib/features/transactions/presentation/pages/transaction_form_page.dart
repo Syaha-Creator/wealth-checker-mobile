@@ -15,6 +15,7 @@ import '../../../assets/data/models/liquid_asset_holding.dart';
 import '../../../assets/presentation/providers/fixed_asset_holdings_provider.dart';
 import '../../../assets/presentation/providers/liquid_asset_holdings_provider.dart';
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../../debts_receivables/presentation/providers/debts_list_provider.dart';
 import '../../../debts_receivables/presentation/providers/receivables_list_provider.dart';
 import '../../data/models/transaction.dart';
@@ -264,6 +265,7 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
 
       ref.invalidate(transactionsListProvider);
       ref.invalidate(wealthSummaryProvider);
+      ref.invalidate(emergencyFundProvider);
       ref.invalidate(monthlyCashFlowProvider);
       ref.invalidate(accountsListProvider);
       if (_type.isDebtOrReceivableType) {

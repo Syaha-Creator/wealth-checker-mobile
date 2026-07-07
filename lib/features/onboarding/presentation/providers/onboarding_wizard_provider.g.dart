@@ -41,7 +41,7 @@ final class OnboardingWizardProvider
   }
 }
 
-String _$onboardingWizardHash() => r'9ab97172892ca4beb902e8d8b6111f1db1e5f6f5';
+String _$onboardingWizardHash() => r'5f4dd6ae209d74e26b644aae143d73b6dad02198';
 
 abstract class _$OnboardingWizard extends $Notifier<OnboardingWizardState> {
   OnboardingWizardState build();

@@ -11,6 +11,7 @@ import '../../../../shared/widgets/empty_state_widget.dart';
 import '../../data/models/monthly_cash_flow.dart';
 import '../../data/models/wealth_summary.dart';
 import '../providers/dashboard_providers.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../../transactions/presentation/widgets/transaction_quick_add_sheet.dart';
 
 class DashboardPage extends ConsumerWidget {
@@ -27,6 +28,7 @@ class DashboardPage extends ConsumerWidget {
 
   Future<void> _refresh(WidgetRef ref) async {
     ref.invalidate(wealthSummaryProvider);
+    ref.invalidate(emergencyFundProvider);
     ref.invalidate(monthlyCashFlowProvider);
     await Future.wait([
       ref.read(wealthSummaryProvider.future),
@@ -59,7 +61,10 @@ class DashboardPage extends ConsumerWidget {
         onRefresh: () => _refresh(ref),
         child: AsyncValueWidget<WealthSummary>(
           value: wealthSummaryAsync,
-          onRetry: () => ref.invalidate(wealthSummaryProvider),
+          onRetry: () {
+            ref.invalidate(wealthSummaryProvider);
+            ref.invalidate(emergencyFundProvider);
+          },
           data: (summary) {
             if (summary.needsOnboarding) {
               return ListView(

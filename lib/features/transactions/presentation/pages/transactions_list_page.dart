@@ -10,6 +10,7 @@ import '../../../../shared/widgets/empty_state_widget.dart';
 import '../../../accounts/data/models/account.dart';
 import '../../../accounts/presentation/providers/accounts_list_provider.dart';
 import '../../../dashboard/presentation/providers/dashboard_providers.dart';
+import '../../../analytics/presentation/providers/analytics_providers.dart';
 import '../../data/models/transaction.dart';
 import '../../data/transactions_repository.dart';
 import '../providers/transactions_list_provider.dart';
@@ -103,6 +104,7 @@ class _TransactionsListPageState extends ConsumerState<TransactionsListPage> {
           );
       ref.invalidate(transactionsListProvider);
       ref.invalidate(wealthSummaryProvider);
+      ref.invalidate(emergencyFundProvider);
       ref.invalidate(monthlyCashFlowProvider);
       ref.invalidate(accountsListProvider);
 
