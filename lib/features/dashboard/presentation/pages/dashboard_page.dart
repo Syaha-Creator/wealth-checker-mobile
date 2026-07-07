@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../auth/data/auth_repository.dart';
 import '../../../../shared/providers/auth_state_provider.dart';
 import '../../../../shared/widgets/wealth_level_badge.dart';
@@ -105,7 +106,9 @@ class DashboardPage extends ConsumerWidget {
                 const SizedBox(height: 24),
                 _DashboardNavSection(
                   title: 'Kelola Data Keuangan',
-                  items: [
+                  accentColor: Theme.of(context).colorScheme.primary,
+                  accentSoftColor: context.semanticColors.brandSoft,
+                  items: const [
                     _DashboardNavItem(
                       icon: Icons.account_balance_wallet_outlined,
                       label: 'Kelola Rekening',
@@ -141,7 +144,9 @@ class DashboardPage extends ConsumerWidget {
                 const SizedBox(height: 24),
                 _DashboardNavSection(
                   title: 'Wawasan Finansial',
-                  items: [
+                  accentColor: context.semanticColors.info,
+                  accentSoftColor: context.semanticColors.infoSoft,
+                  items: const [
                     _DashboardNavItem(
                       icon: Icons.health_and_safety_outlined,
                       label: 'Cek Kesehatan Finansial',
@@ -162,7 +167,9 @@ class DashboardPage extends ConsumerWidget {
                 const SizedBox(height: 24),
                 _DashboardNavSection(
                   title: 'Perencanaan Jangka Panjang',
-                  items: [
+                  accentColor: context.semanticColors.accentPurple,
+                  accentSoftColor: context.semanticColors.accentPurpleSoft,
+                  items: const [
                     _DashboardNavItem(
                       icon: Icons.flag_outlined,
                       label: 'Kelola Target Impian',
@@ -199,10 +206,14 @@ class _DashboardNavItem {
 class _DashboardNavSection extends StatelessWidget {
   const _DashboardNavSection({
     required this.title,
+    required this.accentColor,
+    required this.accentSoftColor,
     required this.items,
   });
 
   final String title;
+  final Color accentColor;
+  final Color accentSoftColor;
   final List<_DashboardNavItem> items;
 
   @override
@@ -217,16 +228,26 @@ class _DashboardNavSection extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 12),
-        _DashboardNavGrid(items: items),
+        _DashboardNavGrid(
+          items: items,
+          accentColor: accentColor,
+          accentSoftColor: accentSoftColor,
+        ),
       ],
     );
   }
 }
 
 class _DashboardNavGrid extends StatelessWidget {
-  const _DashboardNavGrid({required this.items});
+  const _DashboardNavGrid({
+    required this.items,
+    required this.accentColor,
+    required this.accentSoftColor,
+  });
 
   final List<_DashboardNavItem> items;
+  final Color accentColor;
+  final Color accentSoftColor;
 
   @override
   Widget build(BuildContext context) {
@@ -241,16 +262,26 @@ class _DashboardNavGrid extends StatelessWidget {
       ),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return _DashboardNavTile(item: items[index]);
+        return _DashboardNavTile(
+          item: items[index],
+          accentColor: accentColor,
+          accentSoftColor: accentSoftColor,
+        );
       },
     );
   }
 }
 
 class _DashboardNavTile extends StatelessWidget {
-  const _DashboardNavTile({required this.item});
+  const _DashboardNavTile({
+    required this.item,
+    required this.accentColor,
+    required this.accentSoftColor,
+  });
 
   final _DashboardNavItem item;
+  final Color accentColor;
+  final Color accentSoftColor;
 
   @override
   Widget build(BuildContext context) {
@@ -263,10 +294,18 @@ class _DashboardNavTile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                item.icon,
-                size: 28,
-                color: Theme.of(context).colorScheme.primary,
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: accentSoftColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  item.icon,
+                  size: 24,
+                  color: accentColor,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -295,7 +334,12 @@ class _NetWorthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
+      elevation: 2,
+      shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.08),
+      surfaceTintColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -303,14 +347,12 @@ class _NetWorthCard extends StatelessWidget {
           children: [
             Text(
               'Kekayaan Bersih',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),
             Text(
               formatRupiah(summary.kekayaanBersih),
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: AppTextStyles.heroNumber(theme.colorScheme.onSurface),
             ),
             const SizedBox(height: 16),
             WealthLevelBadge(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Color palette aligned with the Next.js web app (`globals.css`).
 abstract final class AppColors {
@@ -21,6 +22,9 @@ abstract final class AppColors {
   static const warning = Color(0xFFF59E0B);
   static const warningHover = Color(0xFFD97706);
   static const info = Color(0xFF3B82F6);
+  static const infoSoft = Color(0xFFEFF6FF);
+  static const accentPurple = Color(0xFF7C3AED);
+  static const accentPurpleSoft = Color(0xFFF5F3FF);
 
   // Dark mode
   static const backgroundDark = Color(0xFF0B1120);
@@ -36,6 +40,23 @@ abstract final class AppColors {
   static const brandHoverDark = Color(0xFF6EE7B7);
   static const dangerDark = Color(0xFFF87171);
   static const warningDark = Color(0xFFFBBF24);
+  static const accentPurpleDark = Color(0xFFA78BFA);
+}
+
+/// Reusable text styles for prominent numeric displays across the app.
+abstract final class AppTextStyles {
+  static const _tabularFigures = [FontFeature.tabularFigures()];
+
+  static TextStyle heroNumber(Color color) {
+    return GoogleFonts.plusJakartaSans(
+      fontSize: 42,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.5,
+      height: 1.1,
+      color: color,
+      fontFeatures: _tabularFigures,
+    );
+  }
 }
 
 abstract final class AppTheme {
@@ -68,6 +89,9 @@ abstract final class AppTheme {
         dangerHover: AppColors.dangerHover,
         warning: AppColors.warning,
         info: AppColors.info,
+        accentPurple: AppColors.accentPurple,
+        infoSoft: AppColors.infoSoft,
+        accentPurpleSoft: AppColors.accentPurpleSoft,
       );
 
   static ThemeData get dark => _buildTheme(
@@ -99,6 +123,9 @@ abstract final class AppTheme {
         dangerHover: AppColors.dangerDark,
         warning: AppColors.warningDark,
         info: AppColors.info,
+        accentPurple: AppColors.accentPurpleDark,
+        infoSoft: Color(0xFF1E3A8A),
+        accentPurpleSoft: Color(0xFF4C1D95),
       );
 
   static ThemeData _buildTheme({
@@ -118,32 +145,28 @@ abstract final class AppTheme {
     required Color dangerHover,
     required Color warning,
     required Color info,
+    required Color accentPurple,
+    required Color infoSoft,
+    required Color accentPurpleSoft,
   }) {
-    final textTheme = TextTheme(
-      headlineLarge: TextStyle(
-        color: textPrimary,
-        fontWeight: FontWeight.w700,
-      ),
-      headlineMedium: TextStyle(
-        color: textPrimary,
-        fontWeight: FontWeight.w600,
-      ),
-      titleLarge: TextStyle(
-        color: textPrimary,
-        fontWeight: FontWeight.w600,
-      ),
-      titleMedium: TextStyle(
-        color: textPrimary,
-        fontWeight: FontWeight.w500,
-      ),
-      bodyLarge: TextStyle(color: textPrimary),
-      bodyMedium: TextStyle(color: textSecondary),
-      bodySmall: TextStyle(color: textMuted),
-      labelLarge: TextStyle(
-        color: textPrimary,
-        fontWeight: FontWeight.w600,
-      ),
-    );
+    final baseTextTheme = ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+    ).textTheme;
+
+    final textTheme = GoogleFonts.plusJakartaSansTextTheme(baseTextTheme)
+        .apply(
+          bodyColor: textPrimary,
+          displayColor: textPrimary,
+        )
+        .copyWith(
+          bodyMedium: GoogleFonts.plusJakartaSans(color: textSecondary),
+          bodySmall: GoogleFonts.plusJakartaSans(color: textMuted),
+          labelLarge: GoogleFonts.plusJakartaSans(
+            color: textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        );
 
     return ThemeData(
       useMaterial3: true,
@@ -270,6 +293,9 @@ abstract final class AppTheme {
           dangerHover: dangerHover,
           warning: warning,
           info: info,
+          infoSoft: infoSoft,
+          accentPurple: accentPurple,
+          accentPurpleSoft: accentPurpleSoft,
         ),
       ],
     );
@@ -288,6 +314,9 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     required this.dangerHover,
     required this.warning,
     required this.info,
+    required this.infoSoft,
+    required this.accentPurple,
+    required this.accentPurpleSoft,
   });
 
   final Color backgroundSubtle;
@@ -299,6 +328,9 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
   final Color dangerHover;
   final Color warning;
   final Color info;
+  final Color infoSoft;
+  final Color accentPurple;
+  final Color accentPurpleSoft;
 
   @override
   AppSemanticColors copyWith({
@@ -311,6 +343,9 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     Color? dangerHover,
     Color? warning,
     Color? info,
+    Color? infoSoft,
+    Color? accentPurple,
+    Color? accentPurpleSoft,
   }) {
     return AppSemanticColors(
       backgroundSubtle: backgroundSubtle ?? this.backgroundSubtle,
@@ -322,6 +357,9 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       dangerHover: dangerHover ?? this.dangerHover,
       warning: warning ?? this.warning,
       info: info ?? this.info,
+      infoSoft: infoSoft ?? this.infoSoft,
+      accentPurple: accentPurple ?? this.accentPurple,
+      accentPurpleSoft: accentPurpleSoft ?? this.accentPurpleSoft,
     );
   }
 
@@ -339,6 +377,10 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       dangerHover: Color.lerp(dangerHover, other.dangerHover, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       info: Color.lerp(info, other.info, t)!,
+      infoSoft: Color.lerp(infoSoft, other.infoSoft, t)!,
+      accentPurple: Color.lerp(accentPurple, other.accentPurple, t)!,
+      accentPurpleSoft:
+          Color.lerp(accentPurpleSoft, other.accentPurpleSoft, t)!,
     );
   }
 }
