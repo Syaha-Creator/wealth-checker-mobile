@@ -62,8 +62,8 @@ class _StepFixedAssetsPageState extends ConsumerState<StepFixedAssetsPage> {
                     label: 'Nama aset',
                     field: FormBuilderTextField(
                       name: 'namaAset',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       validator: FormBuilderValidators.required(),
                     ),
                   ),
@@ -72,8 +72,8 @@ class _StepFixedAssetsPageState extends ConsumerState<StepFixedAssetsPage> {
                     label: 'Jumlah',
                     field: FormBuilderTextField(
                       name: 'jumlah',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -87,8 +87,8 @@ class _StepFixedAssetsPageState extends ConsumerState<StepFixedAssetsPage> {
                     label: 'Harga beli rata-rata',
                     field: FormBuilderTextField(
                       name: 'hargaBeliRataRata',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),

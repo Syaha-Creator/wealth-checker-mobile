@@ -18,10 +18,10 @@ class RetirementPlanPage extends ConsumerWidget {
     final planAsync = ref.watch(retirementPlanProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Rencana Pensiun & Warisan'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
       ),
       body: AsyncValueWidget<RetirementPlan>(
         value: planAsync,
@@ -151,32 +151,32 @@ class _SummaryCard extends StatelessWidget {
         children: [
             Text(
               'Sisa uang bulanan',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               formatRupiah(plan.sisaUangBulanan ?? 0),
-              style: AppTextStyles.headingMedium(AppColors.textPrimary),
+              style: AppTextStyles.headingMedium(context.semanticColors.textPrimary),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'Dana terkumpul saat ini',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               formatRupiah(plan.danaTerkumpulSaatIni ?? 0),
-              style: AppTextStyles.money(AppColors.textPrimary),
+              style: AppTextStyles.money(context.semanticColors.textPrimary),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'Selisih menuju target',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               formatRupiah(plan.selisihMenujuTarget ?? 0),
-              style: AppTextStyles.money(AppColors.brandPrimary),
+              style: AppTextStyles.money(context.semanticColors.brand),
             ),
           ],
         ),
@@ -316,7 +316,7 @@ class _SectionCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+            style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.md),
           child,

@@ -20,10 +20,10 @@ class HealthCheckupPage extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Cek Kesehatan Finansial'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
       ),
       body: AsyncValueWidget<HealthCheckup>(
         value: checkupAsync,
@@ -51,7 +51,7 @@ class HealthCheckupPage extends ConsumerWidget {
                       checkup.wealthLevelName.isNotEmpty
                           ? 'Level ${checkup.wealthLevel} · ${checkup.wealthLevelName}'
                           : 'Level ${checkup.wealthLevel}',
-                      style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                      style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -64,7 +64,7 @@ class HealthCheckupPage extends ConsumerWidget {
                   child: Text(
                     'Lengkapi data keuangan Anda terlebih dahulu untuk mendapatkan '
                     'diagnosa dan saran kesehatan finansial.',
-                    style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+                    style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -73,7 +73,7 @@ class HealthCheckupPage extends ConsumerWidget {
                   title: 'Diagnosa',
                   child: Text(
                     checkup.diagnosa,
-                    style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -91,14 +91,14 @@ class HealthCheckupPage extends ConsumerWidget {
                                 Icon(
                                   Icons.check_circle_outline,
                                   size: 18,
-                                  color: AppColors.brandPrimary,
+                                  color: context.semanticColors.brand,
                                 ),
                                 const SizedBox(width: AppSpacing.sm),
                                 Expanded(
                                   child: Text(
                                     item,
                                     style: AppTextStyles.bodyMedium(
-                                      AppColors.textPrimary,
+                                      context.semanticColors.textPrimary,
                                     ),
                                   ),
                                 ),
@@ -114,14 +114,14 @@ class HealthCheckupPage extends ConsumerWidget {
                   title: 'Saran',
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: AppColors.accentBlueSoft,
+                      color: context.semanticColors.accentBlueSoft,
                       borderRadius: AppRadius.circular,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(AppSpacing.lg),
                       child: Text(
                         checkup.saran,
-                        style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+                        style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary),
                       ),
                     ),
                   ),
@@ -151,7 +151,7 @@ class HealthCheckupPage extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.lg),
                 Text(
                   'Perjalanan Level',
-                  style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                  style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 ...List.generate(_maxLevel + 1, (level) {
@@ -162,13 +162,13 @@ class HealthCheckupPage extends ConsumerWidget {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                     child: AppCard.subtle(
-                      color: isCurrent ? AppColors.accentBlueSoft : null,
+                      color: isCurrent ? context.semanticColors.accentBlueSoft : null,
                       padding: const EdgeInsets.all(AppSpacing.lg),
                       child: Row(
                         children: [
                           Icon(
                             passed ? Icons.check_circle : Icons.radio_button_unchecked,
-                            color: passed ? AppColors.brandPrimary : AppColors.textMuted,
+                            color: passed ? context.semanticColors.brand : context.semanticColors.textMuted,
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
@@ -178,8 +178,8 @@ class HealthCheckupPage extends ConsumerWidget {
                                   : 'Level $level',
                               style: AppTextStyles.bodyLarge(
                                 passed
-                                    ? AppColors.textPrimary
-                                    : AppColors.textMuted,
+                                    ? context.semanticColors.textPrimary
+                                    : context.semanticColors.textMuted,
                               ),
                             ),
                           ),
@@ -223,7 +223,7 @@ class _SectionCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+            style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.md),
           child,
@@ -247,8 +247,8 @@ class _SummaryRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppTextStyles.bodyMedium(AppColors.textSecondary)),
-        Text(value, style: AppTextStyles.money(AppColors.textPrimary)),
+        Text(label, style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary)),
+        Text(value, style: AppTextStyles.money(context.semanticColors.textPrimary)),
       ],
     );
   }

@@ -33,10 +33,10 @@ class AnalyticsPage extends ConsumerWidget {
     final incomeAsync = ref.watch(incomeProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Analisa Keuangan'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -142,12 +142,12 @@ class _AnalyticsDateFilterBar extends ConsumerWidget {
         children: [
           Text(
             'Rentang Tanggal',
-            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+            style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
             '${dateFormat.format(range.from)} – ${dateFormat.format(range.to)}',
-            style: AppTextStyles.bodySmall(AppColors.textMuted),
+            style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
           ),
           const SizedBox(height: AppSpacing.md),
           Wrap(
@@ -221,12 +221,12 @@ class _FilterChipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.bgSurface,
-      shadowColor: AppColors.brandPrimary.withValues(alpha: 0.08),
+      color: context.semanticColors.surface,
+      shadowColor: context.semanticColors.brand.withValues(alpha: 0.08),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.circular,
-        side: BorderSide(color: AppColors.borderDefault.withValues(alpha: 0.5)),
+        side: BorderSide(color: context.semanticColors.border.withValues(alpha: 0.5)),
       ),
       child: InkWell(
         onTap: onPressed,
@@ -240,12 +240,12 @@ class _FilterChipButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 16, color: AppColors.textSecondary),
+                Icon(icon, size: 16, color: context.semanticColors.textSecondary),
                 const SizedBox(width: AppSpacing.xs),
               ],
               Text(
                 label,
-                style: AppTextStyles.labelMedium(AppColors.textPrimary),
+                style: AppTextStyles.labelMedium(context.semanticColors.textPrimary),
               ),
             ],
           ),
@@ -282,7 +282,7 @@ class _AnalyticsSectionCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+            style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.lg),
           child,
@@ -334,7 +334,7 @@ class _WealthHistoryChart extends StatelessWidget {
         if (history.hasEnoughPoints)
           Text(
             'Perubahan: ${formatRupiah(history.delta)}',
-            style: AppTextStyles.bodySmall(AppColors.textMuted),
+            style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
           ),
         const SizedBox(height: AppSpacing.md),
         SizedBox(
@@ -358,7 +358,7 @@ class _WealthHistoryChart extends StatelessWidget {
                     getTitlesWidget: (value, meta) {
                       return Text(
                         _compactRupiah(value.toInt()),
-                        style: AppTextStyles.bodySmall(AppColors.textMuted),
+                        style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                       );
                     },
                   ),
@@ -381,7 +381,7 @@ class _WealthHistoryChart extends StatelessWidget {
                         padding: const EdgeInsets.only(top: AppSpacing.sm),
                         child: Text(
                           DateFormat('dd/MM').format(tanggal),
-                          style: AppTextStyles.bodySmall(AppColors.textMuted),
+                          style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                         ),
                       );
                     },
@@ -393,14 +393,14 @@ class _WealthHistoryChart extends StatelessWidget {
                 LineChartBarData(
                   spots: spots,
                   isCurved: true,
-                  color: AppColors.accentBlue,
+                  color: context.semanticColors.accentBlue,
                   barWidth: 3,
                   dotData: FlDotData(
                     show: points.length <= 12,
                   ),
                   belowBarData: BarAreaData(
                     show: true,
-                    color: AppColors.accentBlueSoft.withValues(alpha: 0.8),
+                    color: context.semanticColors.accentBlueSoft.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -446,22 +446,22 @@ class _MonthlyPlTable extends StatelessWidget {
       child: DataTable(
         columns: [
           DataColumn(
-            label: Text('Bulan', style: AppTextStyles.labelMedium(AppColors.textPrimary)),
+            label: Text('Bulan', style: AppTextStyles.labelMedium(context.semanticColors.textPrimary)),
           ),
           DataColumn(
-            label: Text('Pendapatan', style: AppTextStyles.labelMedium(AppColors.textPrimary)),
+            label: Text('Pendapatan', style: AppTextStyles.labelMedium(context.semanticColors.textPrimary)),
           ),
           DataColumn(
-            label: Text('Pengeluaran', style: AppTextStyles.labelMedium(AppColors.textPrimary)),
+            label: Text('Pengeluaran', style: AppTextStyles.labelMedium(context.semanticColors.textPrimary)),
           ),
           DataColumn(
-            label: Text('Tabungan', style: AppTextStyles.labelMedium(AppColors.textPrimary)),
+            label: Text('Tabungan', style: AppTextStyles.labelMedium(context.semanticColors.textPrimary)),
           ),
         ],
         rows: rows.map((row) {
           final tabunganColor = row.tabunganNegatif
-              ? AppColors.dangerPrimary
-              : AppColors.brandPrimary;
+              ? context.semanticColors.danger
+              : context.semanticColors.brand;
           return DataRow(
             cells: [
               DataCell(Text(_formatBulan(row.bulan))),

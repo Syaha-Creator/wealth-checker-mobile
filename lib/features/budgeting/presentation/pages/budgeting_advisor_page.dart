@@ -89,10 +89,10 @@ class _BudgetingAdvisorPageState extends ConsumerState<BudgetingAdvisorPage> {
     planAsync.whenData(_prefillFromPlan);
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Saran Budgeting'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -122,12 +122,12 @@ class _BudgetingAdvisorPageState extends ConsumerState<BudgetingAdvisorPage> {
                   children: [
                     Text(
                       'Rencana Pemasukan Bulanan',
-                      style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                      style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     TextFormField(
                       controller: _incomeController,
-                      style: AppTextStyles.money(AppColors.textPrimary),
+                      style: AppTextStyles.money(context.semanticColors.textPrimary),
                       decoration: const InputDecoration(
                         labelText: 'Nominal',
                         hintText: '0',
@@ -149,7 +149,7 @@ class _BudgetingAdvisorPageState extends ConsumerState<BudgetingAdvisorPage> {
                       const SizedBox(height: AppSpacing.md),
                       Text(
                         _errorMessage!,
-                        style: AppTextStyles.bodySmall(AppColors.dangerPrimary),
+                        style: AppTextStyles.bodySmall(context.semanticColors.danger),
                       ),
                     ],
                     const SizedBox(height: AppSpacing.lg),
@@ -206,7 +206,7 @@ class _WealthLevelHeader extends StatelessWidget {
         children: [
           Text(
             'Level kekayaan saat ini',
-            style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+            style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.md),
           WealthLevelBadge(
@@ -225,29 +225,32 @@ class _AdviceSection extends StatelessWidget {
 
   final BudgetingAdvice advice;
 
-  static const _tintColors = [
-    AppColors.accentBlueSoft,
-    AppColors.brandSoft,
-    AppColors.investPurpleSoft,
-    AppColors.amberAccentSoft,
+  static List<Color> _tintColors(AppSemanticColors colors) => [
+    colors.accentBlueSoft,
+    colors.brandSoft,
+    colors.investPurpleSoft,
+    colors.amberAccentSoft,
   ];
 
-  static const _accentColors = [
-    AppColors.accentBlue,
-    AppColors.brandPrimary,
-    AppColors.investPurple,
-    AppColors.amberAccent,
+  static List<Color> _accentColors(AppSemanticColors colors) => [
+    colors.accentBlue,
+    colors.brand,
+    colors.investPurple,
+    colors.amberAccent,
   ];
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+    final tintColors = _tintColors(colors);
+    final accentColors = _accentColors(colors);
     if (advice.wealthLevel < 0) {
       return AppCard.subtle(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
           'Lengkapi data keuangan Anda terlebih dahulu untuk mendapatkan '
           'rekomendasi alokasi anggaran.',
-          style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
         ),
       );
     }
@@ -257,7 +260,7 @@ class _AdviceSection extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
           'Belum ada rekomendasi alokasi untuk level kekayaan Anda.',
-          style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
         ),
       );
     }
@@ -267,19 +270,19 @@ class _AdviceSection extends StatelessWidget {
       children: [
         Text(
           'Rekomendasi Alokasi',
-          style: AppTextStyles.headingSmall(AppColors.textPrimary),
+          style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           advice.hasPlan
               ? 'Berdasarkan rencana ${formatRupiah(advice.rencanaPemasukanBulanan)}'
               : 'Simpan rencana pemasukan untuk melihat nominal per kategori.',
-          style: AppTextStyles.bodySmall(AppColors.textMuted),
+          style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
         ),
         const SizedBox(height: AppSpacing.md),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.accentBlueSoft,
+            color: context.semanticColors.accentBlueSoft,
             borderRadius: AppRadius.circular,
           ),
           child: Padding(
@@ -287,7 +290,7 @@ class _AdviceSection extends StatelessWidget {
             child: Text(
               'Alokasi di bawah bersifat rekomendasi berdasarkan level kekayaan. '
               'Gunakan "Simpan Rencana" di atas untuk menyimpan pemasukan bulanan.',
-              style: AppTextStyles.bodySmall(AppColors.textPrimary),
+              style: AppTextStyles.bodySmall(context.semanticColors.textPrimary),
             ),
           ),
         ),
@@ -299,8 +302,8 @@ class _AdviceSection extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
             child: _AllocationCard(
               allocation: item,
-              softColor: _tintColors[index % _tintColors.length],
-              accentColor: _accentColors[index % _accentColors.length],
+              softColor: tintColors[index % tintColors.length],
+              accentColor: accentColors[index % accentColors.length],
             ),
           );
         }),
@@ -308,7 +311,7 @@ class _AdviceSection extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             'Sisa tidak teralokasi: ${formatRupiah(advice.sisaTidakTeralokasi)}',
-            style: AppTextStyles.bodySmall(AppColors.textMuted),
+            style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
           ),
         ],
       ],
@@ -345,7 +348,7 @@ class _AllocationCard extends StatelessWidget {
                 children: [
                   Text(
                     allocation.kategori,
-                    style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                    style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
@@ -357,7 +360,7 @@ class _AllocationCard extends StatelessWidget {
             ),
             Text(
               formatRupiah(allocation.nominal),
-              style: AppTextStyles.money(AppColors.textPrimary),
+              style: AppTextStyles.money(context.semanticColors.textPrimary),
             ),
           ],
         ),

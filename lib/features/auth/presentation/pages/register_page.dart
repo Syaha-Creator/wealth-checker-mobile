@@ -62,7 +62,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -90,8 +90,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         label: 'Nama',
                         field: FormBuilderTextField(
                           name: 'name',
-                          style: authFieldTextStyle,
-                          decoration: authInputDecoration(
+                          style: authFieldTextStyle(context),
+                          decoration: authInputDecoration(context,
                             hintText: 'Nama lengkap',
                           ),
                           textInputAction: TextInputAction.next,
@@ -106,8 +106,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         label: 'Email',
                         field: FormBuilderTextField(
                           name: 'email',
-                          style: authFieldTextStyle,
-                          decoration: authInputDecoration(
+                          style: authFieldTextStyle(context),
+                          decoration: authInputDecoration(context,
                             hintText: 'nama@email.com',
                           ),
                           keyboardType: TextInputType.emailAddress,
@@ -124,8 +124,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         label: 'Kata Sandi',
                         field: FormBuilderTextField(
                           name: 'password',
-                          style: authFieldTextStyle,
-                          decoration: authInputDecoration(
+                          style: authFieldTextStyle(context),
+                          decoration: authInputDecoration(context,
                             hintText: 'Minimal $_minPasswordLength karakter',
                           ),
                           obscureText: true,

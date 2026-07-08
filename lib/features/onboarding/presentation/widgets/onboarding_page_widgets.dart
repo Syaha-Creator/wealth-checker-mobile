@@ -30,12 +30,12 @@ class OnboardingProgressHeader extends StatelessWidget {
         children: [
           Text(
             'Langkah ${currentStep + 1} dari $onboardingStepCount',
-            style: AppTextStyles.labelMedium(AppColors.textMuted),
+            style: AppTextStyles.labelMedium(context.semanticColors.textMuted),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
             stepTitle,
-            style: AppTextStyles.headingMedium(AppColors.textPrimary),
+            style: AppTextStyles.headingMedium(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.lg),
           Row(
@@ -54,12 +54,12 @@ class OnboardingProgressHeader extends StatelessWidget {
                     height: 8,
                     decoration: BoxDecoration(
                       color: isFilled
-                          ? AppColors.brandPrimary
-                          : AppColors.backgroundSubtle,
+                          ? context.semanticColors.brand
+                          : context.semanticColors.backgroundSubtle,
                       borderRadius: BorderRadius.circular(999),
                       border: isActive
                           ? Border.all(
-                              color: AppColors.brandPrimary.withValues(alpha: 0.35),
+                              color: context.semanticColors.brand.withValues(alpha: 0.35),
                               width: 1,
                             )
                           : null,
@@ -75,8 +75,8 @@ class OnboardingProgressHeader extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 4,
-              backgroundColor: AppColors.backgroundSubtle,
-              color: AppColors.brandPrimary,
+              backgroundColor: context.semanticColors.backgroundSubtle,
+              color: context.semanticColors.brand,
             ),
           ),
         ],
@@ -94,7 +94,7 @@ class OnboardingStepIntro extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+      style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
     );
   }
 }
@@ -130,7 +130,7 @@ class OnboardingLabeledField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyles.labelMedium(AppColors.textPrimary),
+          style: AppTextStyles.labelMedium(context.semanticColors.textPrimary),
         ),
         const SizedBox(height: AppSpacing.sm),
         field,
@@ -152,8 +152,8 @@ class OnboardingAddEntryButton extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.brandPrimary,
-        side: const BorderSide(color: AppColors.brandPrimary, width: 1.5),
+        foregroundColor: context.semanticColors.brand,
+        side: BorderSide(color: context.semanticColors.brand, width: 1.5),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
           vertical: AppSpacing.md,
@@ -161,7 +161,7 @@ class OnboardingAddEntryButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
-        textStyle: AppTextStyles.bodyMedium(AppColors.brandPrimary).copyWith(
+        textStyle: AppTextStyles.bodyMedium(context.semanticColors.brand).copyWith(
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -188,12 +188,12 @@ class OnboardingSecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.textSecondary,
-          side: const BorderSide(color: AppColors.borderDefault, width: 1.5),
+          foregroundColor: context.semanticColors.textSecondary,
+          side: BorderSide(color: context.semanticColors.border, width: 1.5),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(14)),
           ),
-          textStyle: AppTextStyles.bodyMedium(AppColors.textSecondary).copyWith(
+          textStyle: AppTextStyles.bodyMedium(context.semanticColors.textSecondary).copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),

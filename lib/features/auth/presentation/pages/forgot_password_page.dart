@@ -98,8 +98,8 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
             label: 'Email',
             field: FormBuilderTextField(
               name: 'email',
-              style: authFieldTextStyle,
-              decoration: authInputDecoration(
+              style: authFieldTextStyle(context),
+              decoration: authInputDecoration(context,
                 hintText: 'nama@email.com',
               ),
               keyboardType: TextInputType.emailAddress,

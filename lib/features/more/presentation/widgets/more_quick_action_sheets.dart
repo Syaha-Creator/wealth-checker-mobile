@@ -22,7 +22,7 @@ Future<void> showAccountsQuickSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: AppColors.bgSurface,
+    backgroundColor: context.semanticColors.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.value)),
     ),
@@ -34,7 +34,7 @@ Future<void> showDebtsQuickSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: AppColors.bgSurface,
+    backgroundColor: context.semanticColors.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.value)),
     ),
@@ -46,7 +46,7 @@ Future<void> showReceivablesQuickSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: AppColors.bgSurface,
+    backgroundColor: context.semanticColors.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.value)),
     ),
@@ -58,7 +58,7 @@ Future<void> showAssetsQuickSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: AppColors.bgSurface,
+    backgroundColor: context.semanticColors.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.value)),
     ),
@@ -74,7 +74,7 @@ Future<void> showProfileQuickSheet(
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: AppColors.bgSurface,
+    backgroundColor: context.semanticColors.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.value)),
     ),
@@ -113,7 +113,7 @@ class _SheetScaffold extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.borderDefault,
+                    color: context.semanticColors.border,
                     borderRadius: AppRadius.circular,
                   ),
                 ),
@@ -125,7 +125,7 @@ class _SheetScaffold extends StatelessWidget {
                         child: Text(
                           title,
                           style: AppTextStyles.headingSmall(
-                            AppColors.textPrimary,
+                            context.semanticColors.textPrimary,
                           ),
                         ),
                       ),
@@ -178,7 +178,7 @@ class _AccountsQuickSheet extends ConsumerWidget {
           if (accounts.isEmpty) {
             return Text(
               'Belum ada rekening. Tambahkan rekening pertama Anda.',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             );
           }
 
@@ -198,14 +198,14 @@ class _AccountsQuickSheet extends ConsumerWidget {
                                 Text(
                                   account.nama,
                                   style: AppTextStyles.headingSmall(
-                                    AppColors.textPrimary,
+                                    context.semanticColors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: AppSpacing.xs),
                                 Text(
                                   formatRupiah(account.saldoCache),
                                   style: AppTextStyles.money(
-                                    AppColors.brandPrimary,
+                                    context.semanticColors.brand,
                                   ),
                                 ),
                               ],
@@ -215,7 +215,7 @@ class _AccountsQuickSheet extends ConsumerWidget {
                             Text(
                               'Nonaktif',
                               style: AppTextStyles.labelMedium(
-                                AppColors.textMuted,
+                                context.semanticColors.textMuted,
                               ),
                             ),
                         ],
@@ -258,7 +258,7 @@ class _DebtsQuickSheet extends ConsumerWidget {
           if (debts.isEmpty) {
             return Text(
               'Tidak ada utang aktif.',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             );
           }
 
@@ -268,21 +268,21 @@ class _DebtsQuickSheet extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: AppCard.subtle(
                   padding: const EdgeInsets.all(AppSpacing.lg),
-                  color: AppColors.dangerNewSoft,
+                  color: context.semanticColors.dangerSoft,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         debt.pemberiUtang,
                         style: AppTextStyles.headingSmall(
-                          AppColors.textPrimary,
+                          context.semanticColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
                         'Sisa ${formatRupiah(debt.sisaSaldo)} dari '
                         '${formatRupiah(debt.saldoAwal)}',
-                        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       ClipRRect(
@@ -290,7 +290,7 @@ class _DebtsQuickSheet extends ConsumerWidget {
                         child: LinearProgressIndicator(
                           value: debt.repaymentProgress,
                           minHeight: 6,
-                          color: AppColors.dangerPrimary,
+                          color: context.semanticColors.danger,
                           backgroundColor: AppColors.white.withValues(alpha: 0.6),
                         ),
                       ),
@@ -336,7 +336,7 @@ class _ReceivablesQuickSheet extends ConsumerWidget {
           if (receivables.isEmpty) {
             return Text(
               'Tidak ada piutang aktif.',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             );
           }
 
@@ -346,21 +346,21 @@ class _ReceivablesQuickSheet extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: AppCard.subtle(
                   padding: const EdgeInsets.all(AppSpacing.lg),
-                  color: AppColors.amberAccentSoft,
+                  color: context.semanticColors.amberAccentSoft,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         receivable.peminjam,
                         style: AppTextStyles.headingSmall(
-                          AppColors.textPrimary,
+                          context.semanticColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
                         'Sisa ${formatRupiah(receivable.sisaSaldo)} dari '
                         '${formatRupiah(receivable.saldoAwal)}',
-                        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       ClipRRect(
@@ -368,7 +368,7 @@ class _ReceivablesQuickSheet extends ConsumerWidget {
                         child: LinearProgressIndicator(
                           value: receivable.collectionProgress,
                           minHeight: 6,
-                          color: AppColors.amberAccent,
+                          color: context.semanticColors.amberAccent,
                           backgroundColor: AppColors.white.withValues(alpha: 0.6),
                         ),
                       ),
@@ -412,13 +412,14 @@ class _AssetsQuickSheet extends ConsumerWidget {
         children: [
           Text(
             'Investasi Likuid',
-            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+            style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.sm),
           AsyncValueWidget<List<LiquidAssetHolding>>(
             value: liquidAsync,
             onRetry: () => ref.invalidate(liquidAssetHoldingsProvider),
             data: (holdings) => _buildHoldingsList(
+              context,
               holdings
                   .where((item) => item.isActive)
                   .map((item) => (item.namaAset, item.totalNilai))
@@ -429,13 +430,14 @@ class _AssetsQuickSheet extends ConsumerWidget {
           const SizedBox(height: AppSpacing.lg),
           Text(
             'Aset Tetap',
-            style: AppTextStyles.headingSmall(AppColors.textPrimary),
+            style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.sm),
           AsyncValueWidget<List<FixedAssetHolding>>(
             value: fixedAsync,
             onRetry: () => ref.invalidate(fixedAssetHoldingsProvider),
             data: (holdings) => _buildHoldingsList(
+              context,
               holdings
                   .where((item) => item.isActive)
                   .map((item) => (item.namaAset, item.totalNilai))
@@ -476,13 +478,14 @@ class _AssetsQuickSheet extends ConsumerWidget {
   }
 
   Widget _buildHoldingsList(
+    BuildContext context,
     List<(String name, double value)> items, {
     required String emptyLabel,
   }) {
     if (items.isEmpty) {
       return Text(
         emptyLabel,
-        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+        style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
       );
     }
 
@@ -498,12 +501,12 @@ class _AssetsQuickSheet extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         item.$1,
-                        style: AppTextStyles.bodyLarge(AppColors.textPrimary),
+                        style: AppTextStyles.bodyLarge(context.semanticColors.textPrimary),
                       ),
                     ),
                     Text(
                       formatRupiah(item.$2.round()),
-                      style: AppTextStyles.money(AppColors.investPurple),
+                      style: AppTextStyles.money(context.semanticColors.investPurple),
                     ),
                   ],
                 ),
@@ -553,7 +556,7 @@ class _ProfileQuickSheet extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.md),
                   Text(
                     'Fitur akan segera hadir',
-                    style: AppTextStyles.bodySmall(AppColors.textMuted),
+                    style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   ElevatedButton(
@@ -566,7 +569,7 @@ class _ProfileQuickSheet extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, __) => Text(
               'Gagal memuat profil.',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -607,7 +610,7 @@ class _ProfileQuickSheet extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: Text(
                 'Mode Gelap',
-                style: AppTextStyles.bodyLarge(AppColors.textPrimary),
+                style: AppTextStyles.bodyLarge(context.semanticColors.textPrimary),
               ),
               value: isDark,
               onChanged: (_) =>
@@ -622,10 +625,10 @@ class _ProfileQuickSheet extends ConsumerWidget {
                 Navigator.of(context).pop();
                 await onLogout();
               },
-              icon: Icon(Icons.logout, color: AppColors.dangerPrimary),
+              icon: Icon(Icons.logout, color: context.semanticColors.danger),
               label: Text(
                 'Keluar',
-                style: AppTextStyles.bodyLarge(AppColors.dangerPrimary),
+                style: AppTextStyles.bodyLarge(context.semanticColors.danger),
               ),
             ),
           ),
@@ -644,7 +647,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: AppTextStyles.labelMedium(AppColors.textMuted),
+      style: AppTextStyles.labelMedium(context.semanticColors.textMuted),
     );
   }
 }
@@ -669,11 +672,11 @@ class _DisabledToggleTile extends StatelessWidget {
         contentPadding: EdgeInsets.zero,
         title: Text(
           label,
-          style: AppTextStyles.bodyMedium(AppColors.textMuted),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textMuted),
         ),
         subtitle: Text(
           subtitle,
-          style: AppTextStyles.bodySmall(AppColors.textMuted),
+          style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
         ),
         value: false,
         onChanged: null,

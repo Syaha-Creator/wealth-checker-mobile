@@ -50,20 +50,20 @@ class MorePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Lainnya'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           Text(
             'Kelola & Modul',
-            style: AppTextStyles.headingMedium(AppColors.textPrimary),
+            style: AppTextStyles.headingMedium(context.semanticColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.md),
-          ..._items.map(
+          ..._moreMenuItems(context.semanticColors).map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: _MoreMenuTile(
@@ -109,70 +109,70 @@ class _MoreMenuItem {
   final Color iconColor;
 }
 
-const _items = [
+List<_MoreMenuItem> _moreMenuItems(AppSemanticColors colors) => [
   _MoreMenuItem(
     key: Key('more_menu_accounts'),
     icon: Icons.account_balance_wallet_outlined,
     label: 'Kelola Rekening',
     action: _MoreMenuAction.accounts,
-    chipColor: AppColors.bgBrandSoft,
-    iconColor: AppColors.brandPrimary,
+    chipColor: colors.brandSoft,
+    iconColor: colors.brand,
   ),
   _MoreMenuItem(
     key: Key('more_menu_debts'),
     icon: Icons.money_off_outlined,
     label: 'Kelola Utang',
     action: _MoreMenuAction.debts,
-    chipColor: AppColors.dangerNewSoft,
-    iconColor: AppColors.dangerPrimary,
+    chipColor: colors.dangerSoft,
+    iconColor: colors.danger,
   ),
   _MoreMenuItem(
     key: Key('more_menu_receivables'),
     icon: Icons.savings_outlined,
     label: 'Kelola Piutang',
     action: _MoreMenuAction.receivables,
-    chipColor: AppColors.amberAccentSoft,
-    iconColor: AppColors.amberAccent,
+    chipColor: colors.amberAccentSoft,
+    iconColor: colors.amberAccent,
   ),
   _MoreMenuItem(
     key: Key('more_menu_assets'),
     icon: Icons.trending_up_outlined,
     label: 'Kelola Aset & Investasi',
     action: _MoreMenuAction.assets,
-    chipColor: AppColors.investPurpleSoft,
-    iconColor: AppColors.investPurple,
+    chipColor: colors.investPurpleSoft,
+    iconColor: colors.investPurple,
   ),
   _MoreMenuItem(
     key: Key('more_menu_health'),
     icon: Icons.health_and_safety_outlined,
     label: 'Cek Kesehatan Finansial',
     action: _MoreMenuAction.healthCheckup,
-    chipColor: AppColors.accentBlueSoft,
-    iconColor: AppColors.accentBlue,
+    chipColor: colors.accentBlueSoft,
+    iconColor: colors.accentBlue,
   ),
   _MoreMenuItem(
     key: Key('more_menu_budgeting'),
     icon: Icons.pie_chart_outline,
     label: 'Saran Budgeting',
     action: _MoreMenuAction.budgeting,
-    chipColor: AppColors.accentBlueSoft,
-    iconColor: AppColors.accentBlue,
+    chipColor: colors.accentBlueSoft,
+    iconColor: colors.accentBlue,
   ),
   _MoreMenuItem(
     key: Key('more_menu_retirement'),
     icon: Icons.elderly_outlined,
     label: 'Rencana Pensiun & Warisan',
     action: _MoreMenuAction.retirement,
-    chipColor: AppColors.investPurpleSoft,
-    iconColor: AppColors.investPurple,
+    chipColor: colors.investPurpleSoft,
+    iconColor: colors.investPurple,
   ),
   _MoreMenuItem(
     key: Key('more_menu_profile'),
     icon: Icons.person_outline,
     label: 'Profil & Pengaturan',
     action: _MoreMenuAction.profile,
-    chipColor: AppColors.backgroundSubtle,
-    iconColor: AppColors.textSecondary,
+    chipColor: colors.backgroundSubtle,
+    iconColor: colors.textSecondary,
   ),
 ];
 
@@ -212,19 +212,19 @@ class _MoreMenuTile extends StatelessWidget {
               children: [
                 Text(
                   item.label,
-                  style: AppTextStyles.bodyLarge(AppColors.textPrimary),
+                  style: AppTextStyles.bodyLarge(context.semanticColors.textPrimary),
                 ),
                 if (item.subtitle != null) ...[
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     item.subtitle!,
-                    style: AppTextStyles.bodySmall(AppColors.textMuted),
+                    style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                   ),
                 ],
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: AppColors.textMuted),
+          Icon(Icons.chevron_right, color: context.semanticColors.textMuted),
         ],
       ),
     );

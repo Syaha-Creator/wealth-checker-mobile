@@ -24,7 +24,7 @@ class OnboardingLocalEntriesList extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
           emptyMessage,
-          style: AppTextStyles.bodyMedium(AppColors.textMuted),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textMuted),
         ),
       );
     }
@@ -45,16 +45,16 @@ class OnboardingLocalEntriesList extends StatelessWidget {
               children: [
                 Expanded(
                   child: DefaultTextStyle(
-                    style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary),
                     child: itemBuilder(context, index, entries[index]),
                   ),
                 ),
                 IconButton(
                   tooltip: 'Hapus',
                   onPressed: () => onRemove(index),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_outline_rounded,
-                    color: AppColors.dangerPrimary,
+                    color: context.semanticColors.danger,
                   ),
                 ),
               ],

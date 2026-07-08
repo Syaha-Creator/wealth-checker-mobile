@@ -91,6 +91,12 @@ abstract final class AppColors {
   static const dangerDark = red400;
   static const warningDark = amber400;
   static const accentPurpleDark = purple300;
+
+  static const accentBlueSoftDark = Color(0xFF1A2744);
+  static const investPurpleSoftDark = Color(0xFF241E38);
+  static const amberAccentSoftDark = Color(0xFF382B1A);
+  static const brandSoftDark = Color(0xFF102820);
+  static const dangerSoftDark = Color(0xFF3A2222);
 }
 
 /// Strict spacing scale — only these values in layout code.
@@ -289,9 +295,10 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaceColor = color ?? context.semanticColors.surface;
     final decoration = _elevated
-        ? AppDecorations.cardElevated(color: color)
-        : AppDecorations.cardSubtle(color: color);
+        ? AppDecorations.cardElevated(color: surfaceColor)
+        : AppDecorations.cardSubtle(color: surfaceColor);
 
     final content = Padding(
       padding: padding ?? EdgeInsets.zero,
@@ -552,6 +559,12 @@ abstract final class AppTheme {
       progressIndicatorTheme: ProgressIndicatorThemeData(color: brand),
       extensions: [
         AppSemanticColors(
+          textPrimary: textPrimary,
+          textSecondary: textSecondary,
+          textMuted: textMuted,
+          background: scaffoldBackground,
+          surface: cardColor,
+          border: dividerColor,
           backgroundSubtle: brightness == Brightness.light
               ? AppColors.backgroundSubtle
               : AppColors.backgroundSubtleDark,
@@ -561,13 +574,36 @@ abstract final class AppTheme {
           borderStrong: brightness == Brightness.light
               ? AppColors.borderStrong
               : AppColors.borderStrongDark,
-          textMuted: textMuted,
-          brandSoft: AppColors.bgBrandSoft,
+          brand: brand,
+          brandSoft: brightness == Brightness.light
+              ? AppColors.bgBrandSoft
+              : AppColors.brandSoftDark,
           danger: danger,
+          dangerSoft: brightness == Brightness.light
+              ? AppColors.dangerNewSoft
+              : AppColors.dangerSoftDark,
           dangerHover: dangerHover,
           warning: warning,
           info: info,
           infoSoft: infoSoft,
+          accentBlue: brightness == Brightness.light
+              ? AppColors.accentBlue
+              : AppColors.accentBlueDark,
+          accentBlueSoft: brightness == Brightness.light
+              ? AppColors.accentBlueSoft
+              : AppColors.accentBlueSoftDark,
+          investPurple: brightness == Brightness.light
+              ? AppColors.investPurple
+              : AppColors.investPurpleDark,
+          investPurpleSoft: brightness == Brightness.light
+              ? AppColors.investPurpleSoft
+              : AppColors.investPurpleSoftDark,
+          amberAccent: brightness == Brightness.light
+              ? AppColors.amberAccent
+              : AppColors.amberAccentDark,
+          amberAccentSoft: brightness == Brightness.light
+              ? AppColors.amberAccentSoft
+              : AppColors.amberAccentSoftDark,
           accentPurple: accentPurple,
           accentPurpleSoft: accentPurpleSoft,
         ),
@@ -579,59 +615,111 @@ abstract final class AppTheme {
 @immutable
 class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
   const AppSemanticColors({
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.textMuted,
+    required this.background,
+    required this.surface,
+    required this.border,
     required this.backgroundSubtle,
     required this.surfaceHover,
     required this.borderStrong,
-    required this.textMuted,
+    required this.brand,
     required this.brandSoft,
     required this.danger,
+    required this.dangerSoft,
     required this.dangerHover,
     required this.warning,
     required this.info,
     required this.infoSoft,
+    required this.accentBlue,
+    required this.accentBlueSoft,
+    required this.investPurple,
+    required this.investPurpleSoft,
+    required this.amberAccent,
+    required this.amberAccentSoft,
     required this.accentPurple,
     required this.accentPurpleSoft,
   });
 
+  final Color textPrimary;
+  final Color textSecondary;
+  final Color textMuted;
+  final Color background;
+  final Color surface;
+  final Color border;
   final Color backgroundSubtle;
   final Color surfaceHover;
   final Color borderStrong;
-  final Color textMuted;
+  final Color brand;
   final Color brandSoft;
   final Color danger;
+  final Color dangerSoft;
   final Color dangerHover;
   final Color warning;
   final Color info;
   final Color infoSoft;
+  final Color accentBlue;
+  final Color accentBlueSoft;
+  final Color investPurple;
+  final Color investPurpleSoft;
+  final Color amberAccent;
+  final Color amberAccentSoft;
   final Color accentPurple;
   final Color accentPurpleSoft;
 
   @override
   AppSemanticColors copyWith({
+    Color? textPrimary,
+    Color? textSecondary,
+    Color? textMuted,
+    Color? background,
+    Color? surface,
+    Color? border,
     Color? backgroundSubtle,
     Color? surfaceHover,
     Color? borderStrong,
-    Color? textMuted,
+    Color? brand,
     Color? brandSoft,
     Color? danger,
+    Color? dangerSoft,
     Color? dangerHover,
     Color? warning,
     Color? info,
     Color? infoSoft,
+    Color? accentBlue,
+    Color? accentBlueSoft,
+    Color? investPurple,
+    Color? investPurpleSoft,
+    Color? amberAccent,
+    Color? amberAccentSoft,
     Color? accentPurple,
     Color? accentPurpleSoft,
   }) {
     return AppSemanticColors(
+      textPrimary: textPrimary ?? this.textPrimary,
+      textSecondary: textSecondary ?? this.textSecondary,
+      textMuted: textMuted ?? this.textMuted,
+      background: background ?? this.background,
+      surface: surface ?? this.surface,
+      border: border ?? this.border,
       backgroundSubtle: backgroundSubtle ?? this.backgroundSubtle,
       surfaceHover: surfaceHover ?? this.surfaceHover,
       borderStrong: borderStrong ?? this.borderStrong,
-      textMuted: textMuted ?? this.textMuted,
+      brand: brand ?? this.brand,
       brandSoft: brandSoft ?? this.brandSoft,
       danger: danger ?? this.danger,
+      dangerSoft: dangerSoft ?? this.dangerSoft,
       dangerHover: dangerHover ?? this.dangerHover,
       warning: warning ?? this.warning,
       info: info ?? this.info,
       infoSoft: infoSoft ?? this.infoSoft,
+      accentBlue: accentBlue ?? this.accentBlue,
+      accentBlueSoft: accentBlueSoft ?? this.accentBlueSoft,
+      investPurple: investPurple ?? this.investPurple,
+      investPurpleSoft: investPurpleSoft ?? this.investPurpleSoft,
+      amberAccent: amberAccent ?? this.amberAccent,
+      amberAccentSoft: amberAccentSoft ?? this.amberAccentSoft,
       accentPurple: accentPurple ?? this.accentPurple,
       accentPurpleSoft: accentPurpleSoft ?? this.accentPurpleSoft,
     );
@@ -641,17 +729,32 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
   AppSemanticColors lerp(ThemeExtension<AppSemanticColors>? other, double t) {
     if (other is! AppSemanticColors) return this;
     return AppSemanticColors(
+      textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
+      textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
+      textMuted: Color.lerp(textMuted, other.textMuted, t)!,
+      background: Color.lerp(background, other.background, t)!,
+      surface: Color.lerp(surface, other.surface, t)!,
+      border: Color.lerp(border, other.border, t)!,
       backgroundSubtle:
           Color.lerp(backgroundSubtle, other.backgroundSubtle, t)!,
       surfaceHover: Color.lerp(surfaceHover, other.surfaceHover, t)!,
       borderStrong: Color.lerp(borderStrong, other.borderStrong, t)!,
-      textMuted: Color.lerp(textMuted, other.textMuted, t)!,
+      brand: Color.lerp(brand, other.brand, t)!,
       brandSoft: Color.lerp(brandSoft, other.brandSoft, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
+      dangerSoft: Color.lerp(dangerSoft, other.dangerSoft, t)!,
       dangerHover: Color.lerp(dangerHover, other.dangerHover, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       info: Color.lerp(info, other.info, t)!,
       infoSoft: Color.lerp(infoSoft, other.infoSoft, t)!,
+      accentBlue: Color.lerp(accentBlue, other.accentBlue, t)!,
+      accentBlueSoft: Color.lerp(accentBlueSoft, other.accentBlueSoft, t)!,
+      investPurple: Color.lerp(investPurple, other.investPurple, t)!,
+      investPurpleSoft:
+          Color.lerp(investPurpleSoft, other.investPurpleSoft, t)!,
+      amberAccent: Color.lerp(amberAccent, other.amberAccent, t)!,
+      amberAccentSoft:
+          Color.lerp(amberAccentSoft, other.amberAccentSoft, t)!,
       accentPurple: Color.lerp(accentPurple, other.accentPurple, t)!,
       accentPurpleSoft:
           Color.lerp(accentPurpleSoft, other.accentPurpleSoft, t)!,

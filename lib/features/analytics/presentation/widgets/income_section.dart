@@ -5,12 +5,12 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../data/models/income_report.dart';
 
-const _incomeChartColors = [
-  AppColors.accentBlue,
-  AppColors.brandPrimary,
-  AppColors.investPurple,
-  AppColors.amberAccent,
-  AppColors.infoPrimary,
+List<Color> _incomeChartColors(AppSemanticColors colors) => [
+  colors.accentBlue,
+  colors.brand,
+  colors.investPurple,
+  colors.amberAccent,
+  colors.info,
 ];
 
 class IncomeSection extends StatelessWidget {
@@ -23,16 +23,17 @@ class IncomeSection extends StatelessWidget {
     if (data.items.isEmpty) {
       return Text(
         'Tidak ada pemasukan dalam rentang tanggal ini.',
-        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+        style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
       );
     }
 
+    final chartColors = _incomeChartColors(context.semanticColors);
     final sections = data.items.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
       return PieChartSectionData(
         value: item.total.toDouble(),
-        color: _incomeChartColors[index % _incomeChartColors.length],
+        color: chartColors[index % chartColors.length],
         radius: 42,
         title: '',
         showTitle: false,
@@ -65,8 +66,7 @@ class IncomeSection extends StatelessWidget {
                   children: data.items.asMap().entries.map((entry) {
                     final index = entry.key;
                     final item = entry.value;
-                    final color =
-                        _incomeChartColors[index % _incomeChartColors.length];
+                    final color = chartColors[index % chartColors.length];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                       child: _IncomeLegendRow(
@@ -88,12 +88,12 @@ class IncomeSection extends StatelessWidget {
             Expanded(
               child: Text(
                 'Total',
-                style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
               ),
             ),
             Text(
               formatRupiah(data.grandTotal),
-              style: AppTextStyles.money(AppColors.textPrimary),
+              style: AppTextStyles.money(context.semanticColors.textPrimary),
             ),
           ],
         ),
@@ -131,7 +131,7 @@ class _IncomeLegendRow extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: AppTextStyles.bodyMedium(AppColors.textPrimary).copyWith(
+            style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary).copyWith(
               fontWeight: isTerbesar ? FontWeight.w600 : FontWeight.w400,
             ),
             overflow: TextOverflow.ellipsis,
@@ -139,7 +139,7 @@ class _IncomeLegendRow extends StatelessWidget {
         ),
         Text(
           '${percent.toStringAsFixed(1)}%',
-          style: AppTextStyles.labelMedium(AppColors.textSecondary),
+          style: AppTextStyles.labelMedium(context.semanticColors.textSecondary),
         ),
       ],
     );

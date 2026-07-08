@@ -5,16 +5,16 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../data/models/budget_vs_actual.dart';
 
-const _categoryColors = [
-  AppColors.accentBlue,
-  AppColors.brandPrimary,
-  AppColors.investPurple,
-  AppColors.amberAccent,
-  AppColors.infoPrimary,
+List<Color> _categoryColors(AppSemanticColors colors) => [
+  colors.accentBlue,
+  colors.brand,
+  colors.investPurple,
+  colors.amberAccent,
+  colors.info,
 ];
 
-Color categoryColorForIndex(int index) =>
-    _categoryColors[index % _categoryColors.length];
+Color categoryColorForIndex(AppSemanticColors colors, int index) =>
+    _categoryColors(colors)[index % _categoryColors(colors).length];
 
 class BudgetVsActualSection extends StatelessWidget {
   const BudgetVsActualSection({super.key, required this.data});
@@ -27,7 +27,7 @@ class BudgetVsActualSection extends StatelessWidget {
       return Text(
         'Lengkapi data keuangan Anda terlebih dahulu untuk melihat '
         'perbandingan rencana dan realisasi anggaran.',
-        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+        style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
       );
     }
 
@@ -37,7 +37,7 @@ class BudgetVsActualSection extends StatelessWidget {
         children: [
           Text(
             'Belum ada rencana budget untuk bulan ini.',
-            style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+            style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.md),
           OutlinedButton.icon(
@@ -61,7 +61,7 @@ class BudgetVsActualSection extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: AppSpacing.lg),
             child: _AllocationRow(
               item: entry.value,
-              color: categoryColorForIndex(entry.key),
+              color: categoryColorForIndex(context.semanticColors, entry.key),
             ),
           ),
         ),
@@ -79,7 +79,7 @@ class BudgetInsightBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.accentBlueSoft,
+        color: context.semanticColors.accentBlueSoft,
         borderRadius: AppRadius.circular,
         boxShadow: AppShadows.shadowSm,
       ),
@@ -97,7 +97,7 @@ class BudgetInsightBanner extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSpacing.sm),
                 child: Icon(
                   Icons.info_outline,
-                  color: AppColors.accentBlue,
+                  color: context.semanticColors.accentBlue,
                   size: 20,
                 ),
               ),
@@ -106,7 +106,7 @@ class BudgetInsightBanner extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+                style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary),
               ),
             ),
           ],
@@ -128,13 +128,13 @@ class _PendapatanRow extends StatelessWidget {
       children: [
         Text(
           'Pendapatan',
-          style: AppTextStyles.headingSmall(AppColors.textPrimary),
+          style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
           '${formatRupiah(pendapatan.aktualNominal)} / '
           '${formatRupiah(pendapatan.rencanaNominal)}',
-          style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
         ),
       ],
     );
@@ -152,7 +152,7 @@ class _AllocationRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final barColor = item.overBudget ? AppColors.dangerPrimary : color;
+    final barColor = item.overBudget ? context.semanticColors.danger : color;
     final progress = item.rencanaNominal <= 0
         ? 0.0
         : (item.aktualNominal / item.rencanaNominal).clamp(0.0, 1.0);
@@ -168,7 +168,7 @@ class _AllocationRow extends StatelessWidget {
             Expanded(
               child: Text(
                 item.kategori,
-                style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
               ),
             ),
             if (item.overBudget)
@@ -178,12 +178,12 @@ class _AllocationRow extends StatelessWidget {
                   vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.dangerNewSoft,
+                  color: context.semanticColors.dangerSoft,
                   borderRadius: AppRadius.circular,
                 ),
                 child: Text(
                   'Over budget',
-                  style: AppTextStyles.labelMedium(AppColors.dangerPrimary),
+                  style: AppTextStyles.labelMedium(context.semanticColors.danger),
                 ),
               ),
           ],
@@ -192,7 +192,7 @@ class _AllocationRow extends StatelessWidget {
         Text(
           '${formatRupiah(item.aktualNominal)} / '
           '${formatRupiah(item.rencanaNominal)}',
-          style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.sm),
         ClipRRect(
@@ -201,14 +201,14 @@ class _AllocationRow extends StatelessWidget {
             value: progress,
             minHeight: 8,
             color: barColor,
-            backgroundColor: AppColors.backgroundSubtle,
+            backgroundColor: context.semanticColors.backgroundSubtle,
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
           'Selisih ${formatRupiah(item.selisih)} ($persenLabel)',
           style: AppTextStyles.bodySmall(
-            item.overBudget ? AppColors.dangerPrimary : AppColors.textMuted,
+            item.overBudget ? context.semanticColors.danger : context.semanticColors.textMuted,
           ).copyWith(fontWeight: FontWeight.w600),
         ),
       ],

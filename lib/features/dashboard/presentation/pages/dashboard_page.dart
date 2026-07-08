@@ -111,7 +111,7 @@ class DashboardPage extends ConsumerWidget {
                         child: _StatMiniCard(
                           label: 'Total Utang',
                           amount: summary.totalUtang,
-                          amountColor: AppColors.dangerPrimary,
+                          amountColor: context.semanticColors.danger,
                         ),
                       ),
                     ],
@@ -166,7 +166,7 @@ class _BerandaHeader extends StatelessWidget {
             children: [
               Text(
                 greeting,
-                style: AppTextStyles.bodyMedium(AppColors.textMuted),
+                style: AppTextStyles.bodyMedium(context.semanticColors.textMuted),
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
@@ -179,7 +179,7 @@ class _BerandaHeader extends StatelessWidget {
           ),
         ),
         Material(
-          color: AppColors.backgroundSubtle,
+          color: context.semanticColors.backgroundSubtle,
           shape: const CircleBorder(),
           child: InkWell(
             onTap: onToggleTheme,
@@ -188,7 +188,7 @@ class _BerandaHeader extends StatelessWidget {
               padding: const EdgeInsets.all(AppSpacing.sm),
               child: Icon(
                 isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                color: AppColors.textSecondary,
+                color: context.semanticColors.textSecondary,
                 size: AppSpacing.xl,
               ),
             ),
@@ -220,7 +220,7 @@ class _NetWorthHeroCard extends StatelessWidget {
         children: [
           Text(
             'Kekayaan Bersih (Net Worth)',
-            style: AppTextStyles.bodySmall(AppColors.textMuted),
+            style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
@@ -255,12 +255,10 @@ class _NetWorthDeltaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final delta = history.delta;
     final isPositive = delta >= 0;
-    final accentColor =
-        isDark ? AppColors.accentBlueDark : AppColors.accentBlue;
-    final color = isPositive ? accentColor : AppColors.dangerPrimary;
+    final accentColor = context.semanticColors.accentBlue;
+    final color = isPositive ? accentColor : context.semanticColors.danger;
     final arrow = isPositive ? '▲' : '▼';
 
     final percent = _deltaPercent(history);
@@ -312,7 +310,7 @@ class _StatMiniCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: AppTextStyles.bodySmall(AppColors.textMuted),
+            style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
@@ -368,12 +366,12 @@ class _LevelProgressCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   subtitle,
-                  style: AppTextStyles.bodySmall(AppColors.textMuted),
+                  style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                 ),
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: AppColors.textMuted),
+          Icon(Icons.chevron_right, color: context.semanticColors.textMuted),
         ],
       ),
     );
@@ -385,23 +383,24 @@ class _AccountsSection extends StatelessWidget {
 
   final List<Account> accounts;
 
-  static const _chipPalette = [
-    (AppColors.bgBrandSoft, AppColors.brandPrimary),
-    (AppColors.investPurpleSoft, AppColors.investPurple),
-    (AppColors.accentBlueSoft, AppColors.accentBlue),
-    (AppColors.amberAccentSoft, AppColors.amberAccent),
+  static List<(Color, Color)> _chipPalette(AppSemanticColors colors) => [
+    (colors.brandSoft, colors.brand),
+    (colors.investPurpleSoft, colors.investPurple),
+    (colors.accentBlueSoft, colors.accentBlue),
+    (colors.amberAccentSoft, colors.amberAccent),
   ];
 
   @override
   Widget build(BuildContext context) {
     final activeAccounts = accounts.where((account) => account.isActive).toList();
+    final chipPalette = _chipPalette(context.semanticColors);
 
     if (activeAccounts.isEmpty) {
       return AppCard.subtle(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
           'Belum ada rekening aktif.',
-          style: AppTextStyles.bodyMedium(AppColors.textMuted),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textMuted),
         ),
       );
     }
@@ -412,8 +411,8 @@ class _AccountsSection extends StatelessWidget {
           if (i > 0) const SizedBox(height: AppSpacing.sm),
           _AccountRow(
             account: activeAccounts[i],
-            chipColor: _chipPalette[i % _chipPalette.length].$1,
-            iconColor: _chipPalette[i % _chipPalette.length].$2,
+            chipColor: chipPalette[i % chipPalette.length].$1,
+            iconColor: chipPalette[i % chipPalette.length].$2,
           ),
         ],
       ],
@@ -473,7 +472,7 @@ class _AccountRow extends StatelessWidget {
                 ),
                 Text(
                   subLabel,
-                  style: AppTextStyles.bodySmall(AppColors.textMuted),
+                  style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                 ),
               ],
             ),

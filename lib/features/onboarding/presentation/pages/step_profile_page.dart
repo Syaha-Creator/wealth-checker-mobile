@@ -104,8 +104,8 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
                     field: FormBuilderDateTimePicker(
                       name: 'tanggalLahir',
                       inputType: InputType.date,
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       validator: FormBuilderValidators.required(),
                     ),
                   ),
@@ -114,8 +114,8 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
                     label: 'Rencana usia pensiun',
                     field: FormBuilderTextField(
                       name: 'rencanaUsiaPensiun',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -130,8 +130,8 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
                     label: 'Rencana usia warisan',
                     field: FormBuilderTextField(
                       name: 'rencanaUsiaWarisan',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -146,8 +146,8 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
                     label: 'Anggota keluarga ditanggung',
                     field: FormBuilderTextField(
                       name: 'anggotaKeluargaDitanggung',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -162,8 +162,8 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
                     label: 'Pemasukan bulanan rata-rata',
                     field: FormBuilderTextField(
                       name: 'pemasukanBulananRataRata',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -177,8 +177,8 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
                     label: 'Pengeluaran bulanan rata-rata',
                     field: FormBuilderTextField(
                       name: 'pengeluaranBulananRataRata',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),

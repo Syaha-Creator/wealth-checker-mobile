@@ -87,8 +87,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         label: 'Email',
                         field: FormBuilderTextField(
                           name: 'email',
-                          style: authFieldTextStyle,
-                          decoration: authInputDecoration(
+                          style: authFieldTextStyle(context),
+                          decoration: authInputDecoration(context,
                             hintText: 'nama@email.com',
                           ),
                           keyboardType: TextInputType.emailAddress,
@@ -130,7 +130,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           const SizedBox(height: AppSpacing.sm),
                           FormBuilderTextField(
                             name: 'password',
-                            style: authFieldTextStyle,
+                            style: authFieldTextStyle(context),
                             decoration: authInputDecoration(context),
                             obscureText: true,
                             textInputAction: TextInputAction.done,

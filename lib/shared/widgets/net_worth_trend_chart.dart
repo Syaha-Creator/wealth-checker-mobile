@@ -24,15 +24,13 @@ class NetWorthTrendChart extends StatelessWidget {
         child: Center(
           child: Text(
             'Belum ada data tren',
-            style: AppTextStyles.bodySmall(AppColors.textMuted),
+            style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
           ),
         ),
       );
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final lineColor =
-        isDark ? AppColors.accentBlueDark : AppColors.accentBlue;
+    final lineColor = context.semanticColors.accentBlue;
     final spots = points
         .asMap()
         .entries

@@ -61,8 +61,8 @@ class _StepReceivablesPageState extends ConsumerState<StepReceivablesPage> {
                     label: 'Nama peminjam',
                     field: FormBuilderTextField(
                       name: 'peminjam',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       validator: FormBuilderValidators.required(),
                     ),
                   ),
@@ -71,8 +71,8 @@ class _StepReceivablesPageState extends ConsumerState<StepReceivablesPage> {
                     label: 'Saldo awal',
                     field: FormBuilderTextField(
                       name: 'saldoAwal',
-                      style: authFieldTextStyle,
-                      decoration: authInputDecoration(),
+                      style: authFieldTextStyle(context),
+                      decoration: authInputDecoration(context),
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),

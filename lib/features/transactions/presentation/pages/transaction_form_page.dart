@@ -909,18 +909,18 @@ class _CategorySuggestionChip extends StatelessWidget {
             vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color: AppColors.bgBrandSoft,
+            color: context.semanticColors.brandSoft,
             borderRadius: AppRadius.circular,
             border: Border.all(
               color: selected
-                  ? AppColors.brandPrimary
-                  : AppColors.brandPrimary.withValues(alpha: 0.35),
+                  ? context.semanticColors.brand
+                  : context.semanticColors.brand.withValues(alpha: 0.35),
             ),
           ),
           child: Text(
             label,
             style: AppTextStyles.bodySmall(
-              selected ? AppColors.brandPrimary : AppColors.textPrimary,
+              selected ? context.semanticColors.brand : context.semanticColors.textPrimary,
             ).copyWith(
               fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             ),

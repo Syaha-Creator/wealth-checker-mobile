@@ -46,13 +46,13 @@ class PersistedChecklistSection extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                      style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
                     ),
                   ),
                   if (showProgress)
                     Text(
                       '$checkedCount/${definitions.length}',
-                      style: AppTextStyles.labelMedium(AppColors.textMuted),
+                      style: AppTextStyles.labelMedium(context.semanticColors.textMuted),
                     ),
                 ],
               ),
@@ -84,12 +84,12 @@ class PersistedChecklistSection extends ConsumerWidget {
           children: [
             Text(
               title,
-              style: AppTextStyles.headingSmall(AppColors.textPrimary),
+              style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
               'Gagal memuat checklist.',
-              style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
@@ -170,8 +170,8 @@ class _CheckboxRow extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: item.isChecked
-            ? AppColors.brandSoft
-            : AppColors.backgroundSubtle,
+            ? context.semanticColors.brandSoft
+            : context.semanticColors.backgroundSubtle,
         borderRadius: AppRadius.circular,
       ),
       child: CheckboxListTile(
@@ -183,7 +183,7 @@ class _CheckboxRow extends StatelessWidget {
         ),
         title: Text(
           item.label,
-          style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+          style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary),
         ),
       ),
     );
@@ -204,8 +204,8 @@ class _AppliedToggleRow extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: item.isChecked
-            ? AppColors.accentBlueSoft
-            : AppColors.backgroundSubtle,
+            ? context.semanticColors.accentBlueSoft
+            : context.semanticColors.backgroundSubtle,
         borderRadius: AppRadius.circular,
       ),
       child: Padding(
@@ -215,7 +215,7 @@ class _AppliedToggleRow extends StatelessWidget {
           children: [
             Text(
               item.label,
-              style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+              style: AppTextStyles.bodyMedium(context.semanticColors.textPrimary),
             ),
             const SizedBox(height: AppSpacing.md),
             Align(
@@ -224,11 +224,11 @@ class _AppliedToggleRow extends StatelessWidget {
                 onPressed: () => onToggle(!item.isChecked),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: item.isChecked
-                      ? AppColors.brandPrimary
-                      : AppColors.textSecondary,
+                      ? context.semanticColors.brand
+                      : context.semanticColors.textSecondary,
                   backgroundColor: item.isChecked
-                      ? AppColors.brandSoft
-                      : AppColors.bgSurface,
+                      ? context.semanticColors.brandSoft
+                      : context.semanticColors.surface,
                 ),
                 child: Text(
                   item.isChecked ? 'Sudah Diterapkan' : 'Belum Diterapkan',

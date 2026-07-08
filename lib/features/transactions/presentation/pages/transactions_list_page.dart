@@ -153,24 +153,24 @@ class _TransactionsListPageState extends ConsumerState<TransactionsListPage> {
         ref.read(transactionsListProvider(_filter).notifier).hasMore;
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Transaksi'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.sm),
             child: Material(
-              color: AppColors.accentBlueSoft,
+              color: context.semanticColors.accentBlueSoft,
               borderRadius: AppRadius.circular,
               child: InkWell(
                 onTap: () => context.push('/transactions/new?type=pengeluaran'),
                 borderRadius: AppRadius.circular,
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(AppSpacing.sm),
                   child: Icon(
                     Icons.add,
-                    color: AppColors.accentBlue,
+                    color: context.semanticColors.accentBlue,
                   ),
                 ),
               ),
@@ -418,21 +418,21 @@ class _TransactionTile extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
-  (Color soft, Color accent) _avatarColors() {
+  (Color soft, Color accent) _avatarColors(AppSemanticColors colors) {
     return switch (transaction.type) {
       TransactionType.pendapatan => (
-          AppColors.brandSoft,
-          AppColors.brandPrimary,
+          colors.brandSoft,
+          colors.brand,
         ),
       TransactionType.pengeluaran => (
-          AppColors.backgroundSubtle,
-          AppColors.textSecondary,
+          colors.backgroundSubtle,
+          colors.textSecondary,
         ),
       TransactionType.transfer => (
-          AppColors.accentBlueSoft,
-          AppColors.accentBlue,
+          colors.accentBlueSoft,
+          colors.accentBlue,
         ),
-      _ => (AppColors.backgroundSubtle, AppColors.textMuted),
+      _ => (colors.backgroundSubtle, colors.textMuted),
     };
   }
 
@@ -478,18 +478,19 @@ class _TransactionTile extends StatelessWidget {
     };
   }
 
-  Color _amountColor() {
+  Color _amountColor(AppSemanticColors colors) {
     return switch (transaction.type) {
-      TransactionType.pendapatan => AppColors.brandPrimary,
-      TransactionType.pengeluaran => AppColors.textSecondary,
-      TransactionType.transfer => AppColors.textSecondary,
-      _ => AppColors.textPrimary,
+      TransactionType.pendapatan => colors.brand,
+      TransactionType.pengeluaran => colors.textSecondary,
+      TransactionType.transfer => colors.textSecondary,
+      _ => colors.textPrimary,
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    final (softColor, accentColor) = _avatarColors();
+    final colors = context.semanticColors;
+    final (softColor, accentColor) = _avatarColors(colors);
     final title = transaction.kategori?.isNotEmpty == true
         ? transaction.kategori!
         : transaction.type.label;
@@ -505,12 +506,12 @@ class _TransactionTile extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: AppSpacing.xl),
         decoration: BoxDecoration(
-          color: AppColors.dangerNewSoft,
+          color: context.semanticColors.dangerSoft,
           borderRadius: AppRadius.circular,
         ),
         child: Icon(
           Icons.delete_outline,
-          color: AppColors.dangerPrimary,
+          color: context.semanticColors.danger,
         ),
       ),
       child: AppCard.subtle(
@@ -541,7 +542,7 @@ class _TransactionTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.headingSmall(AppColors.textPrimary),
+                    style: AppTextStyles.headingSmall(context.semanticColors.textPrimary),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
@@ -553,7 +554,7 @@ class _TransactionTile extends StatelessWidget {
                     ].join(' · '),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.bodySmall(AppColors.textMuted),
+                    style: AppTextStyles.bodySmall(context.semanticColors.textMuted),
                   ),
                 ],
               ),
@@ -561,7 +562,7 @@ class _TransactionTile extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
             Text(
               _amountLabel(),
-              style: AppTextStyles.money(_amountColor()),
+              style: AppTextStyles.money(_amountColor(colors)),
             ),
           ],
         ),

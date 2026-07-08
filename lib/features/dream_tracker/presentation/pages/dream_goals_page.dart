@@ -17,14 +17,15 @@ class _GoalTint {
   final Color accent;
 }
 
-const _goalTints = [
-  _GoalTint(soft: AppColors.accentBlueSoft, accent: AppColors.accentBlue),
-  _GoalTint(soft: AppColors.brandSoft, accent: AppColors.brandPrimary),
-  _GoalTint(soft: AppColors.investPurpleSoft, accent: AppColors.investPurple),
-  _GoalTint(soft: AppColors.amberAccentSoft, accent: AppColors.amberAccent),
+List<_GoalTint> _goalTints(AppSemanticColors colors) => [
+  _GoalTint(soft: colors.accentBlueSoft, accent: colors.accentBlue),
+  _GoalTint(soft: colors.brandSoft, accent: colors.brand),
+  _GoalTint(soft: colors.investPurpleSoft, accent: colors.investPurple),
+  _GoalTint(soft: colors.amberAccentSoft, accent: colors.amberAccent),
 ];
 
-_GoalTint _goalTintForIndex(int index) => _goalTints[index % _goalTints.length];
+_GoalTint _goalTintForIndex(AppSemanticColors colors, int index) =>
+    _goalTints(colors)[index % _goalTints(colors).length];
 
 class DreamGoalsPage extends ConsumerWidget {
   const DreamGoalsPage({super.key});
@@ -79,10 +80,10 @@ class DreamGoalsPage extends ConsumerWidget {
     final goalsAsync = ref.watch(dreamGoalsListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       appBar: AppBar(
         title: const Text('Target Impian'),
-        backgroundColor: AppColors.bgPrimary,
+        backgroundColor: context.semanticColors.background,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/dream-goals/new'),
@@ -149,7 +150,7 @@ class DreamGoalsPage extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.lg),
                       _DreamGoalCard(
                         goal: goals[index],
-                        tint: _goalTintForIndex(index),
+                        tint: _goalTintForIndex(context.semanticColors, index),
                         onEdit: () => context.push(
                           '/dream-goals/${goals[index].id}/edit',
                           extra: goals[index],
@@ -164,7 +165,7 @@ class DreamGoalsPage extends ConsumerWidget {
                 final goal = goals[index];
                 return _DreamGoalCard(
                   goal: goal,
-                  tint: _goalTintForIndex(index),
+                  tint: _goalTintForIndex(context.semanticColors, index),
                   onEdit: () => context.push(
                     '/dream-goals/${goal.id}/edit',
                     extra: goal,
@@ -193,7 +194,7 @@ class _DreamGoalsSummaryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '$activeCount impian aktif · ${formatRupiah(totalCollected)} terkumpul',
-      style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+      style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
     );
   }
 }
@@ -256,7 +257,7 @@ class _DreamGoalCard extends StatelessWidget {
                             child: Text(
                               goal.namaGoal,
                               style: AppTextStyles.headingSmall(
-                                AppColors.textPrimary,
+                                context.semanticColors.textPrimary,
                               ),
                             ),
                           ),
@@ -273,7 +274,7 @@ class _DreamGoalCard extends StatelessWidget {
                               child: Text(
                                 'Tercapai',
                                 style: AppTextStyles.labelMedium(
-                                  AppColors.brandPrimary,
+                                  context.semanticColors.brand,
                                 ),
                               ),
                             ),
@@ -281,7 +282,7 @@ class _DreamGoalCard extends StatelessWidget {
                             padding: EdgeInsets.zero,
                             icon: Icon(
                               Icons.more_horiz,
-                              color: AppColors.textMuted,
+                              color: context.semanticColors.textMuted,
                             ),
                             onSelected: (value) {
                               if (value == 'edit') {
@@ -304,7 +305,7 @@ class _DreamGoalCard extends StatelessWidget {
                       Text(
                         '${formatRupiah(goal.saldoSaatIni)} dari '
                         '${formatRupiah(goal.targetNominal)}',
-                        style: AppTextStyles.bodyMedium(AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium(context.semanticColors.textSecondary),
                       ),
                     ],
                   ),

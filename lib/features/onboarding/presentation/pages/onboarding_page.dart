@@ -85,7 +85,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
