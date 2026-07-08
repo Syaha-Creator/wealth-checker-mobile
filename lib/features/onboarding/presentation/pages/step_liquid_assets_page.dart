@@ -3,9 +3,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
+import '../../../auth/presentation/widgets/auth_page_widgets.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../data/models/onboarding_entries.dart';
 import '../providers/onboarding_wizard_provider.dart';
 import '../widgets/onboarding_local_entries_list.dart';
+import '../widgets/onboarding_page_widgets.dart';
 
 class StepLiquidAssetsPage extends ConsumerStatefulWidget {
   const StepLiquidAssetsPage({super.key});
@@ -42,56 +45,65 @@ class _StepLiquidAssetsPageState extends ConsumerState<StepLiquidAssetsPage> {
     );
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Catat aset setara kas atau investasi likuid.',
-            style: Theme.of(context).textTheme.bodyMedium,
+          const OnboardingStepIntro(
+            text: 'Catat aset setara kas atau investasi likuid.',
           ),
-          const SizedBox(height: 16),
-          FormBuilder(
-            key: _formKey,
-            child: Column(
-              children: [
-                FormBuilderTextField(
-                  name: 'namaAset',
-                  decoration: const InputDecoration(labelText: 'Nama aset'),
-                  validator: FormBuilderValidators.required(),
-                ),
-                const SizedBox(height: 12),
-                FormBuilderTextField(
-                  name: 'jumlah',
-                  decoration: const InputDecoration(labelText: 'Jumlah'),
-                  keyboardType: TextInputType.number,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.numeric(),
-                    FormBuilderValidators.min(0.0001),
-                  ]),
-                ),
-                const SizedBox(height: 12),
-                FormBuilderTextField(
-                  name: 'hargaBeliRataRata',
-                  decoration: const InputDecoration(labelText: 'Harga beli rata-rata'),
-                  keyboardType: TextInputType.number,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.numeric(),
-                    FormBuilderValidators.min(0),
-                  ]),
-                ),
-              ],
+          const SizedBox(height: AppSpacing.lg),
+          OnboardingFormCard(
+            child: FormBuilder(
+              key: _formKey,
+              child: Column(
+                children: [
+                  AuthLabeledField(
+                    label: 'Nama aset',
+                    field: FormBuilderTextField(
+                      name: 'namaAset',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      validator: FormBuilderValidators.required(),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Jumlah',
+                    field: FormBuilderTextField(
+                      name: 'jumlah',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(0.0001),
+                      ]),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Harga beli rata-rata',
+                    field: FormBuilderTextField(
+                      name: 'hargaBeliRataRata',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(0),
+                      ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: _addEntry,
-            icon: const Icon(Icons.add),
-            label: const Text('Tambah ke daftar'),
-          ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
+          OnboardingAddEntryButton(onPressed: _addEntry),
+          const SizedBox(height: AppSpacing.lg),
           OnboardingLocalEntriesList(
             entries: entries,
             onRemove: (index) =>

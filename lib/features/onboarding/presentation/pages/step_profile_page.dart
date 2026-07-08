@@ -3,8 +3,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
+import '../../../auth/presentation/widgets/auth_page_widgets.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../data/models/onboarding_entries.dart';
 import '../providers/onboarding_wizard_provider.dart';
+import '../widgets/onboarding_page_widgets.dart';
 
 class StepProfilePage extends ConsumerStatefulWidget {
   const StepProfilePage({super.key});
@@ -68,7 +71,7 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
     );
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: FormBuilder(
         key: _formKey,
         onChanged: () => _saveDraft(),
@@ -88,77 +91,104 @@ class StepProfilePageState extends ConsumerState<StepProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Lengkapi rencana sisa uang bulanan dan perencanaan pensiun/warisan.',
-              style: Theme.of(context).textTheme.bodyMedium,
+            const OnboardingStepIntro(
+              text:
+                  'Lengkapi rencana sisa uang bulanan dan perencanaan pensiun/warisan.',
             ),
-            const SizedBox(height: 16),
-            FormBuilderDateTimePicker(
-              name: 'tanggalLahir',
-              inputType: InputType.date,
-              decoration: const InputDecoration(labelText: 'Tanggal lahir'),
-              validator: FormBuilderValidators.required(),
-            ),
-            const SizedBox(height: 12),
-            FormBuilderTextField(
-              name: 'rencanaUsiaPensiun',
-              decoration: const InputDecoration(labelText: 'Rencana usia pensiun'),
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.min(30),
-                FormBuilderValidators.max(99),
-              ]),
-            ),
-            const SizedBox(height: 12),
-            FormBuilderTextField(
-              name: 'rencanaUsiaWarisan',
-              decoration: const InputDecoration(labelText: 'Rencana usia warisan'),
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.min(30),
-                FormBuilderValidators.max(120),
-              ]),
-            ),
-            const SizedBox(height: 12),
-            FormBuilderTextField(
-              name: 'anggotaKeluargaDitanggung',
-              decoration:
-                  const InputDecoration(labelText: 'Anggota keluarga ditanggung'),
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.min(1),
-                FormBuilderValidators.max(20),
-              ]),
-            ),
-            const SizedBox(height: 12),
-            FormBuilderTextField(
-              name: 'pemasukanBulananRataRata',
-              decoration:
-                  const InputDecoration(labelText: 'Pemasukan bulanan rata-rata'),
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.min(0),
-              ]),
-            ),
-            const SizedBox(height: 12),
-            FormBuilderTextField(
-              name: 'pengeluaranBulananRataRata',
-              decoration:
-                  const InputDecoration(labelText: 'Pengeluaran bulanan rata-rata'),
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.min(0),
-              ]),
+            const SizedBox(height: AppSpacing.lg),
+            OnboardingFormCard(
+              child: Column(
+                children: [
+                  OnboardingLabeledField(
+                    label: 'Tanggal lahir',
+                    field: FormBuilderDateTimePicker(
+                      name: 'tanggalLahir',
+                      inputType: InputType.date,
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      validator: FormBuilderValidators.required(),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Rencana usia pensiun',
+                    field: FormBuilderTextField(
+                      name: 'rencanaUsiaPensiun',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(30),
+                        FormBuilderValidators.max(99),
+                      ]),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Rencana usia warisan',
+                    field: FormBuilderTextField(
+                      name: 'rencanaUsiaWarisan',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(30),
+                        FormBuilderValidators.max(120),
+                      ]),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Anggota keluarga ditanggung',
+                    field: FormBuilderTextField(
+                      name: 'anggotaKeluargaDitanggung',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(1),
+                        FormBuilderValidators.max(20),
+                      ]),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Pemasukan bulanan rata-rata',
+                    field: FormBuilderTextField(
+                      name: 'pemasukanBulananRataRata',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(0),
+                      ]),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Pengeluaran bulanan rata-rata',
+                    field: FormBuilderTextField(
+                      name: 'pengeluaranBulananRataRata',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(0),
+                      ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

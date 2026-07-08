@@ -5,8 +5,10 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../features/auth/data/auth_repository.dart';
 import '../../../../shared/providers/auth_state_provider.dart';
+import '../widgets/auth_page_widgets.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -58,86 +60,86 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Masuk'),
-      ),
+      backgroundColor: AppColors.bgPrimary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: FormBuilder(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Wealth Checker',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xl,
+                vertical: AppSpacing.xxl,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - (AppSpacing.xxl * 2),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Masuk ke akun Anda',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                FormBuilderTextField(
-                  name: 'email',
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'nama@email.com',
+                child: FormBuilder(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const AuthPageHeader(
+                        subtitle: 'Masuk untuk melihat kekayaan bersihmu',
+                      ),
+                      const SizedBox(height: AppSpacing.xxl),
+                      AuthLabeledField(
+                        label: 'Email',
+                        field: FormBuilderTextField(
+                          name: 'email',
+                          style: authFieldTextStyle,
+                          decoration: authInputDecoration(
+                            hintText: 'nama@email.com',
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.email(),
+                          ]),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      AuthLabeledField(
+                        label: 'Kata Sandi',
+                        field: FormBuilderTextField(
+                          name: 'password',
+                          style: authFieldTextStyle,
+                          decoration: authInputDecoration(),
+                          obscureText: true,
+                          textInputAction: TextInputAction.done,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onSubmitted: (_) => _isLoading ? null : _submit(),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.minLength(_minPasswordLength),
+                          ]),
+                        ),
+                      ),
+                      if (_errorMessage != null) ...[
+                        const SizedBox(height: AppSpacing.lg),
+                        AuthErrorBanner(message: _errorMessage!),
+                      ],
+                      const SizedBox(height: AppSpacing.xl),
+                      AuthPrimaryButton(
+                        label: 'Masuk',
+                        isLoading: _isLoading,
+                        onPressed: _submit,
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      AuthFooterLink(
+                        leadingText: 'Belum punya akun? ',
+                        actionText: 'Daftar',
+                        enabled: !_isLoading,
+                        onTap: () => context.go('/register'),
+                      ),
+                    ],
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.email(),
-                  ]),
                 ),
-                const SizedBox(height: 16),
-                FormBuilderTextField(
-                  name: 'password',
-                  decoration: const InputDecoration(
-                    labelText: 'Kata sandi',
-                  ),
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onSubmitted: (_) => _isLoading ? null : _submit(),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.minLength(_minPasswordLength),
-                  ]),
-                ),
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Masuk'),
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: _isLoading ? null : () => context.go('/register'),
-                  child: const Text('Belum punya akun? Daftar'),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

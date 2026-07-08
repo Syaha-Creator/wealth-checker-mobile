@@ -3,9 +3,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
+import '../../../auth/presentation/widgets/auth_page_widgets.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../data/models/onboarding_entries.dart';
 import '../providers/onboarding_wizard_provider.dart';
 import '../widgets/onboarding_local_entries_list.dart';
+import '../widgets/onboarding_page_widgets.dart';
 
 class StepAccountsPage extends ConsumerStatefulWidget {
   const StepAccountsPage({super.key});
@@ -40,45 +43,51 @@ class _StepAccountsPageState extends ConsumerState<StepAccountsPage> {
     );
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Tambahkan rekening kas dan tabunganmu. Kamu bisa menambah lebih dari satu.',
-            style: Theme.of(context).textTheme.bodyMedium,
+          const OnboardingStepIntro(
+            text:
+                'Tambahkan rekening kas dan tabunganmu. Kamu bisa menambah lebih dari satu.',
           ),
-          const SizedBox(height: 16),
-          FormBuilder(
-            key: _formKey,
-            child: Column(
-              children: [
-                FormBuilderTextField(
-                  name: 'nama',
-                  decoration: const InputDecoration(labelText: 'Nama rekening'),
-                  validator: FormBuilderValidators.required(),
-                ),
-                const SizedBox(height: 12),
-                FormBuilderTextField(
-                  name: 'saldoAwal',
-                  decoration: const InputDecoration(labelText: 'Saldo awal'),
-                  keyboardType: TextInputType.number,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.numeric(),
-                    FormBuilderValidators.min(0),
-                  ]),
-                ),
-              ],
+          const SizedBox(height: AppSpacing.lg),
+          OnboardingFormCard(
+            child: FormBuilder(
+              key: _formKey,
+              child: Column(
+                children: [
+                  AuthLabeledField(
+                    label: 'Nama rekening',
+                    field: FormBuilderTextField(
+                      name: 'nama',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      validator: FormBuilderValidators.required(),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthLabeledField(
+                    label: 'Saldo awal',
+                    field: FormBuilderTextField(
+                      name: 'saldoAwal',
+                      style: authFieldTextStyle,
+                      decoration: authInputDecoration(),
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(0),
+                      ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: _addEntry,
-            icon: const Icon(Icons.add),
-            label: const Text('Tambah ke daftar'),
-          ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
+          OnboardingAddEntryButton(onPressed: _addEntry),
+          const SizedBox(height: AppSpacing.lg),
           OnboardingLocalEntriesList(
             entries: entries,
             onRemove: (index) =>

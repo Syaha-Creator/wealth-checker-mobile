@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../data/models/onboarding_entries.dart';
 import '../providers/onboarding_wizard_provider.dart';
+import '../widgets/onboarding_page_widgets.dart';
 import 'step_accounts_page.dart';
 import 'step_credit_cards_page.dart';
 import 'step_debts_page.dart';
@@ -11,6 +13,7 @@ import 'step_fixed_assets_page.dart';
 import 'step_liquid_assets_page.dart';
 import 'step_profile_page.dart';
 import 'step_receivables_page.dart';
+import '../../../auth/presentation/widgets/auth_page_widgets.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
@@ -82,31 +85,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Onboarding'),
-      ),
+      backgroundColor: AppColors.bgPrimary,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Langkah ${currentStep + 1} dari $onboardingStepCount',
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  onboardingStepTitles[currentStep],
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 12),
-                LinearProgressIndicator(
-                  value: (currentStep + 1) / onboardingStepCount,
-                ),
-              ],
-            ),
+          OnboardingProgressHeader(
+            currentStep: currentStep,
+            stepTitle: onboardingStepTitles[currentStep],
           ),
           Expanded(
             child: PageView(
@@ -125,40 +110,21 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           ),
           if (wizardState.errorMessage != null)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                wizardState.errorMessage!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.sm,
               ),
+              child: AuthErrorBanner(message: wizardState.errorMessage!),
             ),
-          SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                if (currentStep > 0)
-                  OutlinedButton(
-                    onPressed: isSubmitting
-                        ? null
-                        : () => ref
-                            .read(onboardingWizardProvider.notifier)
-                            .goBack(),
-                    child: const Text('Kembali'),
-                  ),
-                if (currentStep > 0) const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: isSubmitting ? null : _handleContinue,
-                    child: isSubmitting
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(isLastStep ? 'Selesai' : 'Lanjut'),
-                  ),
-                ),
-              ],
-            ),
+          OnboardingBottomBar(
+            showBack: currentStep > 0,
+            primaryLabel: isLastStep ? 'Selesai' : 'Lanjut',
+            isLoading: isSubmitting,
+            onPrimaryPressed: isSubmitting ? null : _handleContinue,
+            onBackPressed: () =>
+                ref.read(onboardingWizardProvider.notifier).goBack(),
           ),
         ],
       ),

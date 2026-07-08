@@ -23,7 +23,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Masuk ke akun Anda'), findsOneWidget);
+    expect(find.text('Masuk untuk melihat kekayaan bersihmu'), findsOneWidget);
+    expect(find.text('Wealth Checker'), findsOneWidget);
     expect(find.widgetWithText(ElevatedButton, 'Masuk'), findsOneWidget);
   });
 }

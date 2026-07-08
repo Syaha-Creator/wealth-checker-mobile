@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_theme.dart';
+
 class OnboardingLocalEntriesList extends StatelessWidget {
   const OnboardingLocalEntriesList({
     super.key,
@@ -18,31 +20,48 @@ class OnboardingLocalEntriesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entries.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+      return AppCard.subtle(
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
           emptyMessage,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: AppTextStyles.bodyMedium(AppColors.textMuted),
         ),
       );
     }
 
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: entries.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) {
-        return Card(
-          child: ListTile(
-            title: itemBuilder(context, index, entries[index]),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () => onRemove(index),
+    return Column(
+      children: List.generate(entries.length, (index) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: index == entries.length - 1 ? 0 : AppSpacing.sm,
+          ),
+          child: AppCard.subtle(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.sm,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: DefaultTextStyle(
+                    style: AppTextStyles.bodyMedium(AppColors.textPrimary),
+                    child: itemBuilder(context, index, entries[index]),
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Hapus',
+                  onPressed: () => onRemove(index),
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: AppColors.dangerPrimary,
+                  ),
+                ),
+              ],
             ),
           ),
         );
-      },
+      }),
     );
   }
 }

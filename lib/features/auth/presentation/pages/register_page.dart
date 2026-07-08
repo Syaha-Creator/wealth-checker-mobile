@@ -5,8 +5,10 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../features/auth/data/auth_repository.dart';
 import '../../../../shared/providers/auth_state_provider.dart';
+import '../widgets/auth_page_widgets.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
@@ -60,100 +62,105 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daftar'),
-      ),
+      backgroundColor: AppColors.bgPrimary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: FormBuilder(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Buat akun baru',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xl,
+                vertical: AppSpacing.xxl,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - (AppSpacing.xxl * 2),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Mulai kelola keuangan Anda',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                FormBuilderTextField(
-                  name: 'name',
-                  decoration: const InputDecoration(
-                    labelText: 'Nama',
-                    hintText: 'Nama lengkap',
+                child: FormBuilder(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const AuthPageHeader(
+                        subtitle:
+                            'Buat akun baru untuk mulai memantau kekayaanmu',
+                      ),
+                      const SizedBox(height: AppSpacing.xxl),
+                      AuthLabeledField(
+                        label: 'Nama',
+                        field: FormBuilderTextField(
+                          name: 'name',
+                          style: authFieldTextStyle,
+                          decoration: authInputDecoration(
+                            hintText: 'Nama lengkap',
+                          ),
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      AuthLabeledField(
+                        label: 'Email',
+                        field: FormBuilderTextField(
+                          name: 'email',
+                          style: authFieldTextStyle,
+                          decoration: authInputDecoration(
+                            hintText: 'nama@email.com',
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.email(),
+                          ]),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      AuthLabeledField(
+                        label: 'Kata Sandi',
+                        field: FormBuilderTextField(
+                          name: 'password',
+                          style: authFieldTextStyle,
+                          decoration: authInputDecoration(
+                            hintText: 'Minimal $_minPasswordLength karakter',
+                          ),
+                          obscureText: true,
+                          textInputAction: TextInputAction.done,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onSubmitted: (_) => _isLoading ? null : _submit(),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.minLength(_minPasswordLength),
+                          ]),
+                        ),
+                      ),
+                      if (_errorMessage != null) ...[
+                        const SizedBox(height: AppSpacing.lg),
+                        AuthErrorBanner(message: _errorMessage!),
+                      ],
+                      const SizedBox(height: AppSpacing.xl),
+                      AuthPrimaryButton(
+                        label: 'Daftar',
+                        isLoading: _isLoading,
+                        onPressed: _submit,
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      AuthFooterLink(
+                        leadingText: 'Sudah punya akun? ',
+                        actionText: 'Masuk',
+                        enabled: !_isLoading,
+                        onTap: () => context.go('/login'),
+                      ),
+                    ],
                   ),
-                  textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                  ]),
                 ),
-                const SizedBox(height: 16),
-                FormBuilderTextField(
-                  name: 'email',
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'nama@email.com',
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.email(),
-                  ]),
-                ),
-                const SizedBox(height: 16),
-                FormBuilderTextField(
-                  name: 'password',
-                  decoration: const InputDecoration(
-                    labelText: 'Kata sandi',
-                    helperText: 'Minimal 8 karakter',
-                  ),
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onSubmitted: (_) => _isLoading ? null : _submit(),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.minLength(_minPasswordLength),
-                  ]),
-                ),
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Daftar'),
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: _isLoading ? null : () => context.go('/login'),
-                  child: const Text('Sudah punya akun? Masuk'),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
