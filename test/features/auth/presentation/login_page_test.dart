@@ -39,6 +39,7 @@ void main() {
       expect(find.byType(AuthLogoMark), findsOneWidget);
       expect(find.text('Wealth Checker'), findsOneWidget);
       expect(find.text('Masuk untuk melihat kekayaan bersihmu'), findsOneWidget);
+      expect(find.text('Lupa kata sandi?'), findsOneWidget);
       expect(find.text('Daftar'), findsOneWidget);
       expect(find.text('Belum punya akun? '), findsOneWidget);
     });

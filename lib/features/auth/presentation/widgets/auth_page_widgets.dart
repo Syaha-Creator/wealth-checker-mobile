@@ -9,26 +9,30 @@ const _primaryButtonRadius = BorderRadius.all(Radius.circular(14));
 class AuthPageHeader extends StatelessWidget {
   const AuthPageHeader({
     super.key,
+    this.title = 'Wealth Checker',
     required this.subtitle,
   });
 
+  final String title;
   final String subtitle;
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+
     return Column(
       children: [
         const AuthLogoMark(),
         const SizedBox(height: AppSpacing.xl),
         Text(
-          'Wealth Checker',
-          style: AppTextStyles.headingLarge(AppColors.textPrimary),
+          title,
+          style: AppTextStyles.headingLarge(colors.textPrimary),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           subtitle,
-          style: AppTextStyles.bodyMedium(AppColors.textMuted),
+          style: AppTextStyles.bodyMedium(colors.textMuted),
           textAlign: TextAlign.center,
         ),
       ],
@@ -41,43 +45,36 @@ class AuthLogoMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.brandSoft,
+        color: colors.brandSoft,
         borderRadius: BorderRadius.circular(16),
         boxShadow: AppShadows.cardSubtle,
       ),
-      child: const SizedBox(
+      child: SizedBox(
         width: 64,
         height: 64,
         child: Center(
-          child: _LogoInnerCircle(),
-        ),
-      ),
-    );
-  }
-}
-
-class _LogoInnerCircle extends StatelessWidget {
-  const _LogoInnerCircle();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: AppColors.brandPrimary,
-          width: 2.5,
-        ),
-      ),
-      child: const SizedBox(
-        width: 28,
-        height: 28,
-        child: Icon(
-          Icons.trending_up_rounded,
-          color: AppColors.brandPrimary,
-          size: 16,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: colors.brand,
+                width: 2.5,
+              ),
+            ),
+            child: SizedBox(
+              width: 28,
+              height: 28,
+              child: Icon(
+                Icons.trending_up_rounded,
+                color: colors.brand,
+                size: 16,
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -101,7 +98,7 @@ class AuthLabeledField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyles.labelMedium(AppColors.textPrimary),
+          style: AppTextStyles.labelMedium(context.semanticColors.textPrimary),
         ),
         const SizedBox(height: AppSpacing.sm),
         field,
@@ -110,59 +107,61 @@ class AuthLabeledField extends StatelessWidget {
   }
 }
 
-InputDecoration authInputDecoration({
+InputDecoration authInputDecoration(
+  BuildContext context, {
   String? hintText,
   String? helperText,
 }) {
-  const borderSide = BorderSide(
-    color: AppColors.borderDefault,
+  final colors = context.semanticColors;
+  final borderSide = BorderSide(
+    color: colors.border,
     width: 1.5,
   );
 
   return InputDecoration(
     hintText: hintText,
     helperText: helperText,
-    helperStyle: AppTextStyles.bodySmall(AppColors.textMuted),
+    helperStyle: AppTextStyles.bodySmall(colors.textMuted),
     filled: true,
-    fillColor: AppColors.bgSurface,
+    fillColor: colors.surface,
     contentPadding: const EdgeInsets.symmetric(
       horizontal: AppSpacing.lg,
       vertical: AppSpacing.md,
     ),
-    border: const OutlineInputBorder(
+    border: OutlineInputBorder(
       borderRadius: _inputBorderRadius,
       borderSide: borderSide,
     ),
-    enabledBorder: const OutlineInputBorder(
+    enabledBorder: OutlineInputBorder(
       borderRadius: _inputBorderRadius,
       borderSide: borderSide,
     ),
-    focusedBorder: const OutlineInputBorder(
+    focusedBorder: OutlineInputBorder(
       borderRadius: _inputBorderRadius,
       borderSide: BorderSide(
-        color: AppColors.brandPrimary,
+        color: colors.brand,
         width: 1.5,
       ),
     ),
-    errorBorder: const OutlineInputBorder(
+    errorBorder: OutlineInputBorder(
       borderRadius: _inputBorderRadius,
       borderSide: BorderSide(
-        color: AppColors.dangerPrimary,
+        color: colors.danger,
         width: 1.5,
       ),
     ),
-    focusedErrorBorder: const OutlineInputBorder(
+    focusedErrorBorder: OutlineInputBorder(
       borderRadius: _inputBorderRadius,
       borderSide: BorderSide(
-        color: AppColors.dangerPrimary,
+        color: colors.dangerHover,
         width: 1.5,
       ),
     ),
   );
 }
 
-TextStyle get authFieldTextStyle =>
-    AppTextStyles.bodyLarge(AppColors.textPrimary).copyWith(
+TextStyle authFieldTextStyle(BuildContext context) =>
+    AppTextStyles.bodyLarge(context.semanticColors.textPrimary).copyWith(
       fontWeight: FontWeight.w600,
     );
 
@@ -180,16 +179,18 @@ class AuthPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+
     return SizedBox(
       width: double.infinity,
       height: 52,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.brandPrimary,
+          backgroundColor: colors.brand,
           foregroundColor: AppColors.white,
-          disabledBackgroundColor: AppColors.textMuted.withValues(alpha: 0.3),
-          disabledForegroundColor: AppColors.textMuted,
+          disabledBackgroundColor: colors.textMuted.withValues(alpha: 0.3),
+          disabledForegroundColor: colors.textMuted,
           elevation: 0,
           shape: const RoundedRectangleBorder(
             borderRadius: _primaryButtonRadius,
@@ -229,19 +230,21 @@ class AuthFooterLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text(
           leadingText,
-          style: AppTextStyles.bodyMedium(AppColors.textMuted),
+          style: AppTextStyles.bodyMedium(colors.textMuted),
         ),
         GestureDetector(
           onTap: enabled ? onTap : null,
           child: Text(
             actionText,
-            style: AppTextStyles.bodyMedium(AppColors.brandPrimary).copyWith(
+            style: AppTextStyles.bodyMedium(colors.brand).copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -258,17 +261,45 @@ class AuthErrorBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.dangerNewSoft,
+        color: colors.dangerSoft,
         borderRadius: AppRadius.circular,
-        border: Border.all(color: AppColors.dangerPrimary.withValues(alpha: 0.2)),
+        border: Border.all(color: colors.danger.withValues(alpha: 0.2)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Text(
           message,
-          style: AppTextStyles.bodySmall(AppColors.dangerPrimary),
+          style: AppTextStyles.bodySmall(colors.danger),
+        ),
+      ),
+    );
+  }
+}
+
+class AuthSuccessBanner extends StatelessWidget {
+  const AuthSuccessBanner({super.key, required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.semanticColors;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.brandSoft,
+        borderRadius: AppRadius.circular,
+        border: Border.all(color: colors.brand.withValues(alpha: 0.2)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Text(
+          message,
+          style: AppTextStyles.bodySmall(colors.brand),
         ),
       ),
     );

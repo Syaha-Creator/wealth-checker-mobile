@@ -128,4 +128,39 @@ void main() {
       ),
     );
   });
+
+  test('requestPasswordReset posts email and redirectTo', () async {
+    final dio = _FakeDio((path, {data}) async {
+      expect(path, '/api/auth/request-password-reset');
+      expect(data, {
+        'email': 'user@example.com',
+        'redirectTo': AuthRepository.passwordResetRedirectTo,
+      });
+      return Response<dynamic>(
+        requestOptions: RequestOptions(path: path),
+        data: {'status': true},
+      );
+    });
+
+    final repository = AuthRepository(dio);
+
+    await repository.requestPasswordReset('user@example.com');
+  });
+
+  test('requestPasswordReset trims email before sending', () async {
+    final dio = _FakeDio((path, {data}) async {
+      expect(data, {
+        'email': 'user@example.com',
+        'redirectTo': AuthRepository.passwordResetRedirectTo,
+      });
+      return Response<dynamic>(
+        requestOptions: RequestOptions(path: path),
+        data: null,
+      );
+    });
+
+    final repository = AuthRepository(dio);
+
+    await repository.requestPasswordReset('  user@example.com  ');
+  });
 }

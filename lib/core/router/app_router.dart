@@ -26,13 +26,14 @@ import '../../features/dream_tracker/data/models/dream_goal.dart';
 import '../../features/dream_tracker/presentation/pages/dream_goal_form_page.dart';
 import '../../features/dream_tracker/presentation/pages/dream_goals_page.dart';
 import '../../features/retirement_plan/presentation/pages/retirement_plan_page.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../shared/providers/auth_state_provider.dart';
 
 part 'app_router.g.dart';
 
-const _authRoutes = {'/login', '/register'};
+const _authRoutes = {'/login', '/register', '/forgot-password'};
 
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
@@ -81,6 +82,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterPage(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordPage(),
       ),
       GoRoute(
         path: '/home',

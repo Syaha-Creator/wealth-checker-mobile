@@ -60,7 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.semanticColors.background,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -101,21 +101,51 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.lg),
-                      AuthLabeledField(
-                        label: 'Kata Sandi',
-                        field: FormBuilderTextField(
-                          name: 'password',
-                          style: authFieldTextStyle,
-                          decoration: authInputDecoration(),
-                          obscureText: true,
-                          textInputAction: TextInputAction.done,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          onSubmitted: (_) => _isLoading ? null : _submit(),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                            FormBuilderValidators.minLength(_minPasswordLength),
-                          ]),
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Kata Sandi',
+                                  style: AppTextStyles.labelMedium(
+                                    context.semanticColors.textPrimary,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: _isLoading
+                                    ? null
+                                    : () => context.go('/forgot-password'),
+                                child: Text(
+                                  'Lupa kata sandi?',
+                                  style: AppTextStyles.bodySmall(
+                                    context.semanticColors.brand,
+                                  ).copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          FormBuilderTextField(
+                            name: 'password',
+                            style: authFieldTextStyle,
+                            decoration: authInputDecoration(context),
+                            obscureText: true,
+                            textInputAction: TextInputAction.done,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            onSubmitted: (_) =>
+                                _isLoading ? null : _submit(),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(),
+                              FormBuilderValidators.minLength(
+                                _minPasswordLength,
+                              ),
+                            ]),
+                          ),
+                        ],
                       ),
                       if (_errorMessage != null) ...[
                         const SizedBox(height: AppSpacing.lg),

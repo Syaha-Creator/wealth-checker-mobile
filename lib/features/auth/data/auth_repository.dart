@@ -57,6 +57,23 @@ class AuthRepository {
     }
   }
 
+  static const passwordResetRedirectTo =
+      'https://wealth.velrox.cloud/reset-password';
+
+  Future<void> requestPasswordReset(String email) async {
+    try {
+      await _dio.post<void>(
+        '/api/auth/request-password-reset',
+        data: {
+          'email': email.trim(),
+          'redirectTo': passwordResetRedirectTo,
+        },
+      );
+    } on DioException catch (error) {
+      throw ApiException.fromDioError(error);
+    }
+  }
+
   /// Returns `true` when the current session has a valid user.
   Future<bool> hasValidSession() async {
     try {
