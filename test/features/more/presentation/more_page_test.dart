@@ -6,6 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wealth_checker_mobile/core/theme/app_theme.dart';
 import 'package:wealth_checker_mobile/features/accounts/data/models/account.dart';
 import 'package:wealth_checker_mobile/features/accounts/presentation/providers/accounts_list_provider.dart';
+import 'package:wealth_checker_mobile/features/assets/data/models/fixed_asset_holding.dart';
+import 'package:wealth_checker_mobile/features/assets/data/models/liquid_asset_holding.dart';
+import 'package:wealth_checker_mobile/features/assets/presentation/providers/fixed_asset_holdings_provider.dart';
+import 'package:wealth_checker_mobile/features/assets/presentation/providers/liquid_asset_holdings_provider.dart';
 import 'package:wealth_checker_mobile/features/dashboard/data/models/wealth_summary.dart';
 import 'package:wealth_checker_mobile/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:wealth_checker_mobile/features/debts_receivables/data/models/debt.dart';
@@ -27,6 +31,35 @@ void main() {
 
       expect(find.text('Bayar Sebagian'), findsOneWidget);
       expect(find.text('Bank ABC'), findsOneWidget);
+      expect(find.byKey(const Key('more_add_debt_btn')), findsOneWidget);
+    });
+
+    testWidgets('debts add button opens snapshot mode picker', (tester) async {
+      await tester.pumpWidget(_buildTestApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('more_menu_debts')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('more_add_debt_btn')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Utang Baru'), findsOneWidget);
+      expect(find.text('Utang yang Sudah Ada'), findsOneWidget);
+    });
+
+    testWidgets('assets add button opens snapshot mode picker', (tester) async {
+      await tester.pumpWidget(_buildTestApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('more_menu_assets')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('more_add_investasi_btn')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Beli Baru'), findsOneWidget);
+      expect(find.text('Sudah Dimiliki'), findsOneWidget);
     });
 
     testWidgets('profile sheet shows disabled soon toggles', (tester) async {
@@ -53,6 +86,8 @@ Widget _buildTestApp() {
     overrides: [
       accountsListProvider.overrideWith(_AccountsOverride.new),
       debtsListProvider.overrideWith(_DebtsOverride.new),
+      liquidAssetHoldingsProvider.overrideWith(_EmptyLiquidHoldings.new),
+      fixedAssetHoldingsProvider.overrideWith(_EmptyFixedHoldings.new),
       wealthSummaryProvider.overrideWith((_) async => _sampleSummary),
     ],
     child: MaterialApp(
@@ -109,4 +144,14 @@ class _DebtsOverride extends DebtsList {
           createdAt: '2026-07-01T00:00:00.000Z',
         ),
       ];
+}
+
+class _EmptyLiquidHoldings extends LiquidAssetHoldings {
+  @override
+  Future<List<LiquidAssetHolding>> build() async => const [];
+}
+
+class _EmptyFixedHoldings extends FixedAssetHoldings {
+  @override
+  Future<List<FixedAssetHolding>> build() async => const [];
 }

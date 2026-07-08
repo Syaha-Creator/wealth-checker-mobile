@@ -13,7 +13,7 @@ class AssetsRepository {
 
   final Dio _dio;
 
-  /// Onboarding snapshot — do not use for ongoing buy/sell transactions.
+  /// Declare asset without cash impact (onboarding & Kelola Aset).
   Future<void> createLiquidAsset({
     required String namaAset,
     required double jumlah,
@@ -33,7 +33,7 @@ class AssetsRepository {
     }
   }
 
-  /// Onboarding snapshot — do not use for ongoing buy/sell transactions.
+  /// Declare asset without cash impact (onboarding & Kelola Aset).
   Future<void> createFixedAsset({
     required String namaAset,
     required double jumlah,

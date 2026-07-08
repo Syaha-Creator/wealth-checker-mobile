@@ -19,7 +19,12 @@ Future<void> loginForScreenshots(WidgetTester tester) async {
 }
 
 Future<void> tapNavTab(WidgetTester tester, String label) async {
-  await tester.tap(find.byTooltip(label));
+  final tooltip = find.byTooltip(label);
+  if (tooltip.evaluate().isNotEmpty) {
+    await tester.tap(tooltip);
+  } else {
+    await tester.tap(find.text(label));
+  }
   await tester.pumpAndSettle(const Duration(milliseconds: 500));
 }
 

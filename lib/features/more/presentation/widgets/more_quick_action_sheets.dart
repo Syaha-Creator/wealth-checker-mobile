@@ -66,6 +66,149 @@ Future<void> showAssetsQuickSheet(BuildContext context) {
   );
 }
 
+Future<void> _showSnapshotAddModeSheet(
+  BuildContext context, {
+  required String title,
+  required String transactionLabel,
+  required String transactionSubtitle,
+  required String declareLabel,
+  required String declareSubtitle,
+  required VoidCallback onTransaction,
+  required VoidCallback onDeclare,
+}) {
+  return showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    backgroundColor: context.semanticColors.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.value)),
+    ),
+    builder: (sheetContext) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.sm,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title,
+                style: AppTextStyles.headingSmall(
+                  context.semanticColors.textPrimary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              _SnapshotAddModeTile(
+                key: const Key('snapshot_add_mode_transaction'),
+                icon: Icons.receipt_long_outlined,
+                label: transactionLabel,
+                subtitle: transactionSubtitle,
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  onTransaction();
+                },
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _SnapshotAddModeTile(
+                key: const Key('snapshot_add_mode_declare'),
+                icon: Icons.inventory_2_outlined,
+                label: declareLabel,
+                subtitle: declareSubtitle,
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  onDeclare();
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void _openDebtAddMode(BuildContext context) {
+  _showSnapshotAddModeSheet(
+    context,
+    title: 'Tambah Utang',
+    transactionLabel: 'Utang Baru',
+    transactionSubtitle: 'Catat pinjaman baru lewat transaksi kas',
+    declareLabel: 'Utang yang Sudah Ada',
+    declareSubtitle: 'Catat utang lama tanpa mengubah saldo rekening',
+    onTransaction: () {
+      context.push('/transactions/new?type=pinjaman_utang');
+      Navigator.of(context).pop();
+    },
+    onDeclare: () {
+      context.push('/debts/new');
+      Navigator.of(context).pop();
+    },
+  );
+}
+
+void _openReceivableAddMode(BuildContext context) {
+  _showSnapshotAddModeSheet(
+    context,
+    title: 'Tambah Piutang',
+    transactionLabel: 'Piutang Baru',
+    transactionSubtitle: 'Catat pemberian piutang lewat transaksi kas',
+    declareLabel: 'Piutang yang Sudah Ada',
+    declareSubtitle: 'Catat piutang lama tanpa mengubah saldo rekening',
+    onTransaction: () {
+      context.push('/transactions/new?type=pemberian_piutang');
+      Navigator.of(context).pop();
+    },
+    onDeclare: () {
+      context.push('/receivables/new');
+      Navigator.of(context).pop();
+    },
+  );
+}
+
+void _openLiquidAssetAddMode(BuildContext context) {
+  _showSnapshotAddModeSheet(
+    context,
+    title: 'Tambah Investasi',
+    transactionLabel: 'Beli Baru',
+    transactionSubtitle: 'Catat pembelian investasi lewat transaksi kas',
+    declareLabel: 'Sudah Dimiliki',
+    declareSubtitle: 'Catat investasi lama tanpa mengubah saldo rekening',
+    onTransaction: () {
+      context.push('/transactions/new?type=beli_investasi');
+      Navigator.of(context).pop();
+    },
+    onDeclare: () {
+      context.push('/assets/declare?kind=liquid');
+      Navigator.of(context).pop();
+    },
+  );
+}
+
+void _openFixedAssetAddMode(BuildContext context) {
+  _showSnapshotAddModeSheet(
+    context,
+    title: 'Tambah Aset',
+    transactionLabel: 'Beli Baru',
+    transactionSubtitle: 'Catat pembelian aset lewat transaksi kas',
+    declareLabel: 'Sudah Dimiliki',
+    declareSubtitle: 'Catat aset lama tanpa mengubah saldo rekening',
+    onTransaction: () {
+      context.push('/transactions/new?type=beli_barang');
+      Navigator.of(context).pop();
+    },
+    onDeclare: () {
+      context.push('/assets/declare?kind=fixed');
+      Navigator.of(context).pop();
+    },
+  );
+}
+
 Future<void> showProfileQuickSheet(
   BuildContext context,
   WidgetRef ref, {
@@ -316,6 +459,15 @@ class _DebtsQuickSheet extends ConsumerWidget {
           );
         },
       ),
+      footer: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          key: const Key('more_add_debt_btn'),
+          onPressed: () => _openDebtAddMode(context),
+          icon: const Icon(Icons.add),
+          label: const Text('Tambah Utang'),
+        ),
+      ),
     );
   }
 }
@@ -393,6 +545,15 @@ class _ReceivablesQuickSheet extends ConsumerWidget {
           );
         },
       ),
+      footer: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          key: const Key('more_add_receivable_btn'),
+          onPressed: () => _openReceivableAddMode(context),
+          icon: const Icon(Icons.add),
+          label: const Text('Tambah Piutang'),
+        ),
+      ),
     );
   }
 }
@@ -452,10 +613,8 @@ class _AssetsQuickSheet extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.of(context).pop();
-                context.push('/transactions/new?type=beli_investasi');
-              },
+              key: const Key('more_add_investasi_btn'),
+              onPressed: () => _openLiquidAssetAddMode(context),
               icon: const Icon(Icons.trending_up),
               label: const Text('Tambah Investasi'),
             ),
@@ -464,10 +623,8 @@ class _AssetsQuickSheet extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.of(context).pop();
-                context.push('/transactions/new?type=beli_barang');
-              },
+              key: const Key('more_add_aset_btn'),
+              onPressed: () => _openFixedAssetAddMode(context),
               icon: const Icon(Icons.inventory_2_outlined),
               label: const Text('Tambah Aset'),
             ),
@@ -680,6 +837,66 @@ class _DisabledToggleTile extends StatelessWidget {
         ),
         value: false,
         onChanged: null,
+      ),
+    );
+  }
+}
+
+class _SnapshotAddModeTile extends StatelessWidget {
+  const _SnapshotAddModeTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.semanticColors.backgroundSubtle,
+      borderRadius: AppRadius.circular,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.circular,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Row(
+            children: [
+              Icon(icon, color: context.semanticColors.brand),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: AppTextStyles.bodyLarge(
+                        context.semanticColors.textPrimary,
+                      ).copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.bodySmall(
+                        context.semanticColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: context.semanticColors.textMuted,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
