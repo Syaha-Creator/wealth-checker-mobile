@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../shared/models/checklist_definitions.dart';
+import '../../../../shared/widgets/persisted_checklist_section.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../../../shared/widgets/async_value_widget.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
@@ -77,7 +79,14 @@ class RetirementPlanPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
+              const PersistedChecklistSection(
+                title: 'Checklist Warisan',
+                category: LegacyPlanningChecklist.category,
+                definitions: LegacyPlanningChecklist.items,
+                showProgress: true,
+              ),
+              const SizedBox(height: AppSpacing.lg),
               _SectionCard(
                 title: 'Dana Terkumpul (Waterfall)',
                 child: _WaterfallSection(

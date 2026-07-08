@@ -12,6 +12,9 @@ import 'package:wealth_checker_mobile/features/budgeting/presentation/pages/budg
 import 'package:wealth_checker_mobile/features/budgeting/presentation/providers/budgeting_providers.dart';
 import 'package:wealth_checker_mobile/features/dashboard/data/models/wealth_summary.dart';
 import 'package:wealth_checker_mobile/features/dashboard/presentation/providers/dashboard_providers.dart';
+import 'package:wealth_checker_mobile/shared/data/checklist_repository.dart';
+
+import '../../../helpers/fake_checklist_repository.dart';
 
 void main() {
   group('BudgetingAdvisorPage', () {
@@ -67,6 +70,7 @@ Widget _buildTestApp({
         return _sampleAdvice;
       }),
       wealthSummaryProvider.overrideWith((_) async => _sampleSummary),
+      checklistRepositoryProvider.overrideWith((_) => FakeChecklistRepository()),
     ],
     child: MaterialApp(
       theme: AppTheme.light,

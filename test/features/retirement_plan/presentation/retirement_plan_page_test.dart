@@ -7,6 +7,9 @@ import 'package:wealth_checker_mobile/core/theme/app_theme.dart';
 import 'package:wealth_checker_mobile/features/retirement_plan/data/models/retirement_plan.dart';
 import 'package:wealth_checker_mobile/features/retirement_plan/presentation/pages/retirement_plan_page.dart';
 import 'package:wealth_checker_mobile/features/retirement_plan/presentation/providers/retirement_plan_provider.dart';
+import 'package:wealth_checker_mobile/shared/data/checklist_repository.dart';
+
+import '../../../helpers/fake_checklist_repository.dart';
 
 void main() {
   group('RetirementPlanPage', () {
@@ -94,6 +97,7 @@ Widget _buildTestApp(RetirementPlan plan) {
   return ProviderScope(
     overrides: [
       retirementPlanProvider.overrideWith((_) async => plan),
+      checklistRepositoryProvider.overrideWith((_) => FakeChecklistRepository()),
     ],
     child: MaterialApp(
       theme: AppTheme.light,

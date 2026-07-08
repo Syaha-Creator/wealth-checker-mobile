@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../shared/models/checklist_definitions.dart';
+import '../../../../shared/widgets/persisted_checklist_section.dart';
 import '../../../../shared/utils/currency_formatter.dart';
 import '../../../../shared/widgets/async_value_widget.dart';
 import '../../../../shared/widgets/wealth_level_badge.dart';
@@ -169,7 +171,19 @@ class _BudgetingAdvisorPageState extends ConsumerState<BudgetingAdvisorPage> {
             AsyncValueWidget<BudgetingAdvice>(
               value: adviceAsync,
               onRetry: () => ref.invalidate(budgetingAdviceProvider),
-              data: (advice) => _AdviceSection(advice: advice),
+              data: (advice) => Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _AdviceSection(advice: advice),
+                  const SizedBox(height: AppSpacing.lg),
+                  const PersistedChecklistSection(
+                    title: 'Tips Budgeting',
+                    category: BudgetingTipsChecklist.category,
+                    definitions: BudgetingTipsChecklist.items,
+                    style: PersistedChecklistStyle.appliedToggle,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
