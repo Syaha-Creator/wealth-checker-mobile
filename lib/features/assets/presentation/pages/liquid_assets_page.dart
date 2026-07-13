@@ -59,6 +59,14 @@ class LiquidAssetsPage extends ConsumerWidget {
           SnackBar(content: Text(error.message)),
         );
       }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Terjadi kesalahan. Silakan coba lagi.'),
+          ),
+        );
+      }
     }
   }
 

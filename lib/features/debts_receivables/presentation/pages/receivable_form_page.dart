@@ -56,8 +56,9 @@ class _ReceivableFormPageState extends ConsumerState<ReceivableFormPage> {
         return;
       }
 
+      final messenger = ScaffoldMessenger.of(context);
       context.pop();
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text(
             widget.isEditMode

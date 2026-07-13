@@ -287,8 +287,9 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
         return;
       }
 
+      final messenger = ScaffoldMessenger.of(context);
       context.pop();
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text(
             widget.isEditMode

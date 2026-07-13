@@ -55,6 +55,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     }
 
     if (completed) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Onboarding berhasil diselesaikan')),
+      );
       context.go('/home');
       return;
     }

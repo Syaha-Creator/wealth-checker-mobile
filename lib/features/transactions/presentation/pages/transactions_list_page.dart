@@ -120,6 +120,14 @@ class _TransactionsListPageState extends ConsumerState<TransactionsListPage> {
           SnackBar(content: Text(error.message)),
         );
       }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Terjadi kesalahan. Silakan coba lagi.'),
+          ),
+        );
+      }
     }
   }
 
