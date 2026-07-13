@@ -30,6 +30,30 @@ void main() {
 
       expect(find.text('Belum ada investasi'), findsOneWidget);
     });
+
+    testWidgets('shows edit and delete actions for each holding', (tester) async {
+      await tester.pumpWidget(
+        _buildTestApp(holdingsOverride: _SuccessLiquidHoldings.new),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('edit_asset_liq-1')), findsOneWidget);
+      expect(find.byKey(const Key('delete_asset_liq-1')), findsOneWidget);
+    });
+
+    testWidgets('delete shows confirmation dialog', (tester) async {
+      await tester.pumpWidget(
+        _buildTestApp(holdingsOverride: _DeletableLiquidHoldings.new),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('delete_asset_liq-1')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Hapus investasi?'), findsOneWidget);
+      expect(find.text('Batal'), findsOneWidget);
+      expect(find.text('Hapus'), findsWidgets);
+    });
   });
 }
 
@@ -70,4 +94,12 @@ class _SuccessLiquidHoldings extends LiquidAssetHoldings {
 class _EmptyLiquidHoldings extends LiquidAssetHoldings {
   @override
   Future<List<LiquidAssetHolding>> build() async => const [];
+}
+
+class _DeletableLiquidHoldings extends LiquidAssetHoldings {
+  @override
+  Future<List<LiquidAssetHolding>> build() async => const [_sampleHolding];
+
+  @override
+  Future<void> deleteAsset(String id) async {}
 }

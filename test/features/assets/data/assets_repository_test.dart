@@ -11,12 +11,24 @@ class _FakeDio implements Dio {
       String path, {
       Map<String, dynamic>? queryParameters,
     })? onGet,
-  }) : _onGet = onGet;
+    Future<Response<dynamic>> Function(
+      String path, {
+      Object? data,
+    })? onPatch,
+    Future<Response<dynamic>> Function(String path)? onDelete,
+  })  : _onGet = onGet,
+        _onPatch = onPatch,
+        _onDelete = onDelete;
 
   final Future<Response<dynamic>> Function(
     String path, {
     Map<String, dynamic>? queryParameters,
   })? _onGet;
+  final Future<Response<dynamic>> Function(
+    String path, {
+    Object? data,
+  })? _onPatch;
+  final Future<Response<dynamic>> Function(String path)? _onDelete;
 
   @override
   Future<Response<T>> get<T>(
@@ -31,6 +43,40 @@ class _FakeDio implements Dio {
       path,
       queryParameters: queryParameters?.cast<String, dynamic>(),
     );
+    return Response<T>(
+      requestOptions: response.requestOptions,
+      data: response.data as T,
+      statusCode: response.statusCode,
+    );
+  }
+
+  @override
+  Future<Response<T>> patch<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final response = await _onPatch!(path, data: data);
+    return Response<T>(
+      requestOptions: response.requestOptions,
+      data: response.data as T,
+      statusCode: response.statusCode,
+    );
+  }
+
+  @override
+  Future<Response<T>> delete<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) async {
+    final response = await _onDelete!(path);
     return Response<T>(
       requestOptions: response.requestOptions,
       data: response.data as T,
@@ -150,6 +196,94 @@ void main() {
       await repository.getFixedAssetHoldings(all: true);
 
       expect(capturedQuery, {'all': 'true'});
+    });
+  });
+
+  group('AssetsRepository liquid mutations', () {
+    test('updateLiquidAsset patches holding fields', () async {
+      Map<String, dynamic>? capturedBody;
+      final dio = _FakeDio(
+        onPatch: (path, {data}) async {
+          expect(path, '/api/assets/liquid/liq-1');
+          capturedBody = Map<String, dynamic>.from(data! as Map);
+          return Response<dynamic>(
+            requestOptions: RequestOptions(path: path),
+            statusCode: 200,
+            data: {..._liquidJson, 'jumlah': '20'},
+          );
+        },
+      );
+
+      final repository = AssetsRepository(dio);
+      final holding = await repository.updateLiquidAsset(
+        id: 'liq-1',
+        jumlah: 20,
+      );
+
+      expect(capturedBody, {'jumlah': 20});
+      expect(holding.jumlah, 20);
+    });
+
+    test('deleteLiquidAsset calls DELETE endpoint', () async {
+      String? deletedPath;
+      final dio = _FakeDio(
+        onDelete: (path) async {
+          deletedPath = path;
+          return Response<dynamic>(
+            requestOptions: RequestOptions(path: path),
+            statusCode: 204,
+          );
+        },
+      );
+
+      final repository = AssetsRepository(dio);
+      await repository.deleteLiquidAsset('liq-1');
+
+      expect(deletedPath, '/api/assets/liquid/liq-1');
+    });
+  });
+
+  group('AssetsRepository fixed mutations', () {
+    test('updateFixedAsset patches holding fields', () async {
+      Map<String, dynamic>? capturedBody;
+      final dio = _FakeDio(
+        onPatch: (path, {data}) async {
+          expect(path, '/api/assets/fixed/fix-1');
+          capturedBody = Map<String, dynamic>.from(data! as Map);
+          return Response<dynamic>(
+            requestOptions: RequestOptions(path: path),
+            statusCode: 200,
+            data: {..._fixedJson, 'namaAset': 'MacBook'},
+          );
+        },
+      );
+
+      final repository = AssetsRepository(dio);
+      final holding = await repository.updateFixedAsset(
+        id: 'fix-1',
+        namaAset: 'MacBook',
+      );
+
+      expect(capturedBody, {'namaAset': 'MacBook'});
+      expect(holding.namaAset, 'MacBook');
+    });
+
+    test('deleteFixedAsset calls DELETE endpoint', () async {
+      String? deletedPath;
+      final dio = _FakeDio(
+        onDelete: (path) async {
+          deletedPath = path;
+          return Response<dynamic>(
+            requestOptions: RequestOptions(path: path),
+            statusCode: 204,
+          );
+        },
+      );
+
+      final repository = AssetsRepository(dio);
+      await repository.deleteFixedAsset('fix-1');
+
+      expect(deletedPath, '/api/assets/fixed/fix-1');
     });
   });
 }

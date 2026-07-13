@@ -94,6 +94,78 @@ class AssetsRepository {
       throw ApiException.fromDioError(error);
     }
   }
+
+  Future<LiquidAssetHolding> updateLiquidAsset({
+    required String id,
+    String? namaAset,
+    double? jumlah,
+    double? hargaBeliRataRata,
+  }) async {
+    try {
+      final body = <String, dynamic>{};
+      if (namaAset != null) {
+        body['namaAset'] = namaAset;
+      }
+      if (jumlah != null) {
+        body['jumlah'] = jumlah;
+      }
+      if (hargaBeliRataRata != null) {
+        body['hargaBeliRataRata'] = hargaBeliRataRata;
+      }
+
+      final response = await _dio.patch<Map<String, dynamic>>(
+        '/api/assets/liquid/$id',
+        data: body,
+      );
+      return LiquidAssetHolding.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioError(error);
+    }
+  }
+
+  Future<void> deleteLiquidAsset(String id) async {
+    try {
+      await _dio.delete<void>('/api/assets/liquid/$id');
+    } on DioException catch (error) {
+      throw ApiException.fromDioError(error);
+    }
+  }
+
+  Future<FixedAssetHolding> updateFixedAsset({
+    required String id,
+    String? namaAset,
+    double? jumlah,
+    double? hargaBeliRataRata,
+  }) async {
+    try {
+      final body = <String, dynamic>{};
+      if (namaAset != null) {
+        body['namaAset'] = namaAset;
+      }
+      if (jumlah != null) {
+        body['jumlah'] = jumlah;
+      }
+      if (hargaBeliRataRata != null) {
+        body['hargaBeliRataRata'] = hargaBeliRataRata;
+      }
+
+      final response = await _dio.patch<Map<String, dynamic>>(
+        '/api/assets/fixed/$id',
+        data: body,
+      );
+      return FixedAssetHolding.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioError(error);
+    }
+  }
+
+  Future<void> deleteFixedAsset(String id) async {
+    try {
+      await _dio.delete<void>('/api/assets/fixed/$id');
+    } on DioException catch (error) {
+      throw ApiException.fromDioError(error);
+    }
+  }
 }
 
 @riverpod

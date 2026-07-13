@@ -27,6 +27,32 @@ class LiquidAssetHoldings extends _$LiquidAssetHoldings {
           jumlah: jumlah,
           hargaBeliRataRata: hargaBeliRataRata,
         );
+    _invalidateAfterMutation(container);
+  }
+
+  Future<void> updateAsset({
+    required String id,
+    String? namaAset,
+    double? jumlah,
+    double? hargaBeliRataRata,
+  }) async {
+    final container = ref.container;
+    await ref.read(assetsRepositoryProvider).updateLiquidAsset(
+          id: id,
+          namaAset: namaAset,
+          jumlah: jumlah,
+          hargaBeliRataRata: hargaBeliRataRata,
+        );
+    _invalidateAfterMutation(container);
+  }
+
+  Future<void> deleteAsset(String id) async {
+    final container = ref.container;
+    await ref.read(assetsRepositoryProvider).deleteLiquidAsset(id);
+    _invalidateAfterMutation(container);
+  }
+
+  void _invalidateAfterMutation(ProviderContainer container) {
     container.invalidate(liquidAssetHoldingsProvider);
     container.invalidate(allLiquidAssetHoldingsProvider);
     container.invalidate(wealthSummaryProvider);

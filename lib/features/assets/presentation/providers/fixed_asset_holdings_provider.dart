@@ -27,6 +27,32 @@ class FixedAssetHoldings extends _$FixedAssetHoldings {
           jumlah: jumlah,
           hargaBeliRataRata: hargaBeliRataRata,
         );
+    _invalidateAfterMutation(container);
+  }
+
+  Future<void> updateAsset({
+    required String id,
+    String? namaAset,
+    double? jumlah,
+    double? hargaBeliRataRata,
+  }) async {
+    final container = ref.container;
+    await ref.read(assetsRepositoryProvider).updateFixedAsset(
+          id: id,
+          namaAset: namaAset,
+          jumlah: jumlah,
+          hargaBeliRataRata: hargaBeliRataRata,
+        );
+    _invalidateAfterMutation(container);
+  }
+
+  Future<void> deleteAsset(String id) async {
+    final container = ref.container;
+    await ref.read(assetsRepositoryProvider).deleteFixedAsset(id);
+    _invalidateAfterMutation(container);
+  }
+
+  void _invalidateAfterMutation(ProviderContainer container) {
     container.invalidate(fixedAssetHoldingsProvider);
     container.invalidate(allFixedAssetHoldingsProvider);
     container.invalidate(wealthSummaryProvider);

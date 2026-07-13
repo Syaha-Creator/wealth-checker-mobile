@@ -30,6 +30,30 @@ void main() {
 
       expect(find.text('Belum ada aset tetap'), findsOneWidget);
     });
+
+    testWidgets('shows edit and delete actions for each holding', (tester) async {
+      await tester.pumpWidget(
+        _buildTestApp(holdingsOverride: _SuccessFixedHoldings.new),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('edit_asset_fix-1')), findsOneWidget);
+      expect(find.byKey(const Key('delete_asset_fix-1')), findsOneWidget);
+    });
+
+    testWidgets('delete shows confirmation dialog', (tester) async {
+      await tester.pumpWidget(
+        _buildTestApp(holdingsOverride: _DeletableFixedHoldings.new),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('delete_asset_fix-1')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Hapus aset tetap?'), findsOneWidget);
+      expect(find.text('Batal'), findsOneWidget);
+      expect(find.text('Hapus'), findsWidgets);
+    });
   });
 }
 
@@ -70,4 +94,12 @@ class _SuccessFixedHoldings extends FixedAssetHoldings {
 class _EmptyFixedHoldings extends FixedAssetHoldings {
   @override
   Future<List<FixedAssetHolding>> build() async => const [];
+}
+
+class _DeletableFixedHoldings extends FixedAssetHoldings {
+  @override
+  Future<List<FixedAssetHolding>> build() async => const [_sampleHolding];
+
+  @override
+  Future<void> deleteAsset(String id) async {}
 }

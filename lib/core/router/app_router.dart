@@ -17,6 +17,9 @@ import '../../features/debts_receivables/presentation/pages/debt_form_page.dart'
 import '../../features/debts_receivables/presentation/pages/debts_list_page.dart';
 import '../../features/debts_receivables/presentation/pages/receivable_form_page.dart';
 import '../../features/debts_receivables/presentation/pages/receivables_list_page.dart';
+import '../../features/assets/data/models/fixed_asset_holding.dart';
+import '../../features/assets/data/models/liquid_asset_holding.dart';
+import '../../features/assets/presentation/pages/asset_form_page.dart';
 import '../../features/assets/presentation/pages/declare_asset_page.dart';
 import '../../features/assets/presentation/pages/fixed_assets_page.dart';
 import '../../features/assets/presentation/pages/liquid_assets_page.dart';
@@ -179,10 +182,40 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/assets/liquid',
         builder: (context, state) => const LiquidAssetsPage(),
+        routes: [
+          GoRoute(
+            path: ':id/edit',
+            builder: (context, state) {
+              final holding = state.extra as LiquidAssetHolding;
+              return AssetFormPage(
+                kind: DeclareAssetKind.liquid,
+                holdingId: holding.id,
+                initialNamaAset: holding.namaAset,
+                initialJumlah: holding.jumlah,
+                initialHargaBeliRataRata: holding.hargaBeliRataRata,
+              );
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/assets/fixed',
         builder: (context, state) => const FixedAssetsPage(),
+        routes: [
+          GoRoute(
+            path: ':id/edit',
+            builder: (context, state) {
+              final holding = state.extra as FixedAssetHolding;
+              return AssetFormPage(
+                kind: DeclareAssetKind.fixed,
+                holdingId: holding.id,
+                initialNamaAset: holding.namaAset,
+                initialJumlah: holding.jumlah,
+                initialHargaBeliRataRata: holding.hargaBeliRataRata,
+              );
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/assets/declare',
